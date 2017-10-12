@@ -7,8 +7,14 @@ import time
 
 class OgameBot:
     def getInfoResources(self):
-        pass
-
+        self.setScope('overview')
+        metal = self.browser.find_element_by_id('resources_metal').text
+        crystal = self.browser.find_element_by_id('resources_crystal').text
+        deuter = self.browser.find_element_by_id('resources_deuterium')
+        print(metal)
+        print(crystal)
+        print(deuter)
+        
     def getInfoBuildings(self):
         pass
 
@@ -52,12 +58,15 @@ class OgameBot:
         :param page: string: on of these: overview, resources, station, traderOverwie, research, shipyard, defense, fleet, galaxy, highscore
         :return: Nothing
         """
+        currentURL = self.browser.current_url
+        uninumber = currentURL[9] + currentURL[10] + currentURL[11]
+
         if (self.current_scope == page):
             return
         if page == 'fleet':
-            self.browser.get("https://s147-pl.ogame.gameforge.com/game/index.php?page=fleet1")
+            self.browser.get("https://s"+uninumber+"-pl.ogame.gameforge.com/game/index.php?page=fleet1")
         else:
-            self.browser.get("https://s147-pl.ogame.gameforge.com/game/index.php?page=" + page)
+            self.browser.get("https://s"+uninumber+"-pl.ogame.gameforge.com/game/index.php?page=" + page)
         self.current_scope = page
 
     def build(self, building):
@@ -89,6 +98,6 @@ class OgameBot:
             # TODO
 
 
-"""login: michael93509@gmail.com password: oOunv72Pg744nd2d45zo: universe: Uriel"""
+"""login: michael93452@gmail.com password: testing1234 universe: Wezn"""
 
 

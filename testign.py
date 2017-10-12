@@ -3,6 +3,7 @@ from OgameBot import OgameBot
 
 testing = OgameBot()
 testing.launchBrowser()
-testing.login('michael93509@gmail.com','oOunv72Pg744nd2d45zo:','Uriel')
+testing.login('michael93452@gmail.com','testing1234','Wezn')
+testing.setScope('resources')
 
-testing.build('SolarPowerPlant')
+testing.getInfoResources()
