@@ -15,6 +15,10 @@ class OgameBot:
         pass
     def _GetInfoPlanetNumber(self):
         pass
+    def _LaunchBrowser(self):
+        pass
+    def _Login(self):
+        pass
     def ChangeScope(self):
         pass
 
