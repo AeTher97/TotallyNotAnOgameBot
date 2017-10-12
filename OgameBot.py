@@ -52,7 +52,7 @@ class OgameBot:
         :param page: string: on of these: overview, resources, station, traderOverwie, research, shipyard, defense, fleet, galaxy, highscore
         :return: Nothing
         """
-        if (self.current_scope == page)
+        if (self.current_scope == page):
             return
         if page == 'fleet':
             self.browser.get("https://s147-pl.ogame.gameforge.com/game/index.php?page=fleet1")
