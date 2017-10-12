@@ -51,26 +51,10 @@ class OgameBot:
         time.sleep(1)
 
     def changeScope(self, page):
-        if page == 'overview':
-            self.browser.get("https://s147-pl.ogame.gameforge.com/game/index.php?page=overview")
-        if page == 'resources':
-            self.browser.get("https://s147-pl.ogame.gameforge.com/game/index.php?page=resources")
-        if page == 'station':
-            self.browser.get("https://s147-pl.ogame.gameforge.com/game/index.php?page=station")
-        if page == 'trader':
-            self.browser.get("https://s147-pl.ogame.gameforge.com/game/index.php?page=traderOverview")
-        if page == 'research':
-            self.browser.get("https://s147-pl.ogame.gameforge.com/game/index.php?page=research")
-        if page == 'shipyard':
-            self.browser.get("https://s147-pl.ogame.gameforge.com/game/index.php?page=shipyard")
-        if page == 'defense':
-            self.browser.get("https://s147-pl.ogame.gameforge.com/game/index.php?page=defense")
         if page == 'fleet':
             self.browser.get("https://s147-pl.ogame.gameforge.com/game/index.php?page=fleet1")
-        if page == 'galaxy':
-            self.browser.get("https://s147-pl.ogame.gameforge.com/game/index.php?page=galaxy")
-        if page == 'highScore':
-            self.browser.get("https://s147-pl.ogame.gameforge.com/game/index.php?page=highscore")
+        else:
+            self.browser.get("https://s147-pl.ogame.gameforge.com/game/index.php?page=" + page)
 
     def build(self, building):
         resources = {'MetalMine': '1', 'CrystalMine' : '2' ,'DeuterExtractor' : '3', 'SolarPowerPlant' : '4',
