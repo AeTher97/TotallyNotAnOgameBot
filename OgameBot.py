@@ -19,6 +19,8 @@ class OgameBot:
                        'DeuterStorage': 0}
     _stationLevels = {'RobotFactory': 0, 'Shipyard': 0, 'Laboratory': 0, 'AllayDepot': 0, 'RocketSilo': 0,
                      'NaniteFactory': 0, 'Terraformer': 0, 'SpaceDock': 0}
+    _planetNumber=0
+    _planetSize=0
 
     def getInfoResources(self):
         self.setScope('overview')
@@ -74,10 +76,15 @@ class OgameBot:
         pass
 
     def getInfoSizeOfPlanet(self):
-        pass
+        self.setScope('overview')
+        self._planetSize = self.browser.find_element_by_xpath("//*[@id='diameterContentField']/span[2]").text
+        print(self._planetSize)
+
 
     def getInfoPlanetNumber(self):
-        pass
+        self.setScope('overview')
+        string = self.browser.find_element_by_xpath("//*[@id='countColonies']/p/span").text
+        self._planetNumber=string[2]
 
     def launchBrowser(self):
         self.browser = webdriver.Chrome()
@@ -142,6 +149,7 @@ class OgameBot:
                 EC.presence_of_all_elements_located((By.XPATH, "//*[@id='content'']/div[2]/a")))
             build = self.browser.find_element(By.XPATH, "//*[@id='content']/div[2]/a")
             build.click()
+
 
             # TODO
 

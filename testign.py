@@ -7,4 +7,4 @@ testing.login('michael93452@gmail.com','testing1234','Wezn')
 
 
 
-testing.getInfoBuildings()
+testing.getInfoSizeOfPlanet()
