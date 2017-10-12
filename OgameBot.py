@@ -25,9 +25,8 @@ class OgameBot:
         self.browser = webdriver.Chrome()
         self.browser.get(('https://pl.ogame.gameforge.com/'))
 
-
-    def login(self,login,password,universe):
-        commercialCloseButton = self.browser.find_element(By.XPATH,"//a[@href='javascript:;']")
+    def login(self, login, password, universe):
+        commercialCloseButton = self.browser.find_element(By.XPATH, "//a[@href='javascript:;']")
         LoginWindowOpen = self.browser.find_element_by_id('loginBtn')
         usernameField = self.browser.find_element_by_id('usernameLogin')
         passwordField = self.browser.find_element_by_id('passwordLogin')
@@ -41,45 +40,53 @@ class OgameBot:
         for i in password:
             passwordField.send_keys(i)
         serverField.send_keys(universe)
-
-        print(login)
-        print(password)
-        print(universe)
         loginButton.click()
+
+        self.current_scope = "overview"
 
     def botWait(self):
         time.sleep(1)
 
-    def changeScope(self, page):
+    def setScope(self, page):
+        """
+        :param page: string: on of these: overview, resources, station, traderOverwie, research, shipyard, defense, fleet, galaxy, highscore
+        :return: Nothing
+        """
+        if (self.current_scope == page)
+            return
         if page == 'fleet':
             self.browser.get("https://s147-pl.ogame.gameforge.com/game/index.php?page=fleet1")
         else:
             self.browser.get("https://s147-pl.ogame.gameforge.com/game/index.php?page=" + page)
+        self.current_scope = page
 
     def build(self, building):
-        resources = {'MetalMine': '1', 'CrystalMine' : '2' ,'DeuterExtractor' : '3', 'SolarPowerPlant' : '4',
-                     'FusionPowerPlant' : '12', 'SolarSatellite' : '212', 'MetalStorage' : '22', 'CrystalStorage' : '23', 'DeuterStorage' : '24'}
-        station = {'RobotFactory' : '14', 'Shipyard' : '21', 'Laboratory' : '31','AllayDepot' : '34' , 'RocketSilo' : '44', 'NaniteFactory' : '15', 'Terraformer' : '33', 'SpaceDock' : '36'}
+        resources = {'MetalMine': '1', 'CrystalMine': '2', 'DeuterExtractor': '3', 'SolarPowerPlant': '4',
+                     'FusionPowerPlant': '12', 'SolarSatellite': '212', 'MetalStorage': '22', 'CrystalStorage': '23',
+                     'DeuterStorage': '24'}
+        station = {'RobotFactory': '14', 'Shipyard': '21', 'Laboratory': '31', 'AllayDepot': '34', 'RocketSilo': '44',
+                   'NaniteFactory': '15', 'Terraformer': '33', 'SpaceDock': '36'}
 
         if building in resources:
-            self.changeScope('resources')
+            self.setScope('resources')
             selection = "//a[@ref='" + resources[building] + "']"
-            btnToClick = self.browser.find_element(By.XPATH,selection)
+            btnToClick = self.browser.find_element(By.XPATH, selection)
             btnToClick.click()
-            WebDriverWait(self.browser, 10).until(EC.presence_of_all_elements_located((By.XPATH,"//*[@id='content']/div[2]/a")))
-            build = self.browser.find_element(By.XPATH,"//*[@id='content']/div[2]/a")
+            WebDriverWait(self.browser, 10).until(
+                EC.presence_of_all_elements_located((By.XPATH, "//*[@id='content']/div[2]/a")))
+            build = self.browser.find_element(By.XPATH, "//*[@id='content']/div[2]/a")
             build.click()
         if building in station:
-            self.changeScope('station')
+            self.setScope('station')
             selection = "//a[@ref='" + station[building] + "']"
-            btnToClick = self.browser.find_element(By.XPATH,selection)
+            btnToClick = self.browser.find_element(By.XPATH, selection)
             btnToClick.click()
-            WebDriverWait(self.browser, 10).until(EC.presence_of_all_elements_located((By.XPATH, "//*[@id='content'']/div[2]/a")))
+            WebDriverWait(self.browser, 10).until(
+                EC.presence_of_all_elements_located((By.XPATH, "//*[@id='content'']/div[2]/a")))
             build = self.browser.find_element(By.XPATH, "//*[@id='content']/div[2]/a")
             build.click()
 
-    # TODO
-
+            # TODO
 
 
 """login: michael93509@gmail.com password: oOunv72Pg744nd2d45zo: universe: Uriel"""
