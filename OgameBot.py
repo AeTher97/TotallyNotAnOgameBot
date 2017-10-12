@@ -6,26 +6,26 @@ import time
 
 
 class OgameBot:
-    def _getInfoResources(self):
+    def getInfoResources(self):
         pass
 
-    def _getInfoBuildings(self):
+    def getInfoBuildings(self):
         pass
 
-    def _getInfoTechnology(self):
+    def getInfoTechnology(self):
         pass
 
-    def _getInfoSizeOfPlanet(self):
+    def getInfoSizeOfPlanet(self):
         pass
 
-    def _getInfoPlanetNumber(self):
+    def getInfoPlanetNumber(self):
         pass
 
-    def _launchBrowser(self):
+    def launchBrowser(self):
         self.browser = webdriver.Chrome()
         self.browser.get(('https://pl.ogame.gameforge.com/'))
 
-    def _login(self,login,password,universe):
+    def login(self,login,password,universe):
         commercialCloseButton = self.browser.find_element(By.XPATH,"//a[@href='javascript:;']")
         LoginWindowOpen = self.browser.find_element_by_id('loginBtn')
         usernameField = self.browser.find_element_by_id('usernameLogin')
@@ -40,12 +40,35 @@ class OgameBot:
         serverField.send_keys(universe)
         loginButton.click()
 
-    def _botWait(self):
+    def botWait(self):
         time.sleep(1)
 
-    def changeScope(self):
-        pass
+    def changeScope(self, page):
+        if page == 'overview':
+            self.browser.get("https://s147-pl.ogame.gameforge.com/game/index.php?page=overview")
+        if page == 'resources':
+            self.browser.get("https://s147-pl.ogame.gameforge.com/game/index.php?page=resources")
+        if page == 'station':
+            self.browser.get("https://s147-pl.ogame.gameforge.com/game/index.php?page=station")
+        if page == 'trader':
+            self.browser.get("https://s147-pl.ogame.gameforge.com/game/index.php?page=traderOverview")
+        if page == 'research':
+            self.browser.get("https://s147-pl.ogame.gameforge.com/game/index.php?page=research")
+        if page == 'shipyard':
+            self.browser.get("https://s147-pl.ogame.gameforge.com/game/index.php?page=shipyard")
+        if page == 'defense':
+            self.browser.get("https://s147-pl.ogame.gameforge.com/game/index.php?page=defense")
+        if page == 'fleet':
+            self.browser.get("https://s147-pl.ogame.gameforge.com/game/index.php?page=fleet1")
+        if page == 'galaxy':
+            self.browser.get("https://s147-pl.ogame.gameforge.com/game/index.php?page=galaxy")
+        if page == 'highscore':
+            self.browser.get("https://s147-pl.ogame.gameforge.com/game/index.php?page=highscore")
 
+
+    def build(self, building):
+        resources = {'MetalMine' : "//a[@title_ref='2']" , 'Crystal'}
+        station = {}
     # TODO
 
 
