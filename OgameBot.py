@@ -3,20 +3,72 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 import time
+import re
 
 
 class OgameBot:
+
+    _resources = {'MetalMine': '1', 'CrystalMine': '2', 'DeuterExtractor': '3', 'SolarPowerPlant': '4',
+                 'FusionPowerPlant': '12', 'SolarSatellite': '212', 'MetalStorage': '22', 'CrystalStorage': '23',
+                 'DeuterStorage': '24'}
+    _station = {'RobotFactory': '14', 'Shipyard': '21', 'Laboratory': '31', 'AllayDepot': '34', 'RocketSilo': '44',
+               'NaniteFactory': '15', 'Terraformer': '33', 'SpaceDock': '36'}
+
+    _resourcesLevels = {'MetalMine': 0, 'CrystalMine': 0, 'DeuterExtractor': 0, 'SolarPowerPlant': 0,
+                       'FusionPowerPlant': 0, 'SolarSatellite': 0, 'MetalStorage': 0, 'CrystalStorage': 0,
+                       'DeuterStorage': 0}
+    _stationLevels = {'RobotFactory': 0, 'Shipyard': 0, 'Laboratory': 0, 'AllayDepot': 0, 'RocketSilo': 0,
+                     'NaniteFactory': 0, 'Terraformer': 0, 'SpaceDock': 0}
+
     def getInfoResources(self):
         self.setScope('overview')
         metal = self.browser.find_element_by_id('resources_metal').text
         crystal = self.browser.find_element_by_id('resources_crystal').text
-        deuter = self.browser.find_element_by_id('resources_deuterium')
+        deuter = self.browser.find_element_by_id('resources_deuterium').text
+        energy = self.browser.find_element_by_id('resources_energy').text
         print(metal)
         print(crystal)
         print(deuter)
+        print(energy)
         
     def getInfoBuildings(self):
-        pass
+        self.setScope('resources')
+        for building in self._resources:
+            if building!='SolarSatellite':
+                selection = "//a[@ref='" + self._resources[building] + "']"
+                btnToClick = self.browser.find_element(By.XPATH, selection)
+                btnToClick.click()
+                WebDriverWait(self.browser, 10).until(
+                    EC.presence_of_all_elements_located((By.XPATH, "//*[@id='content']/div[2]/a")))
+
+                level = int(re.search(r'\d+', self.browser.find_element_by_xpath("//*[@id='content']/span").text).group())
+                self._resourcesLevels[building] = level
+
+        self.setScope('station')
+        for building in self._station:
+            if building!='Laboratory':
+                selection = "//a[@ref='" + self._station[building] + "']"
+                btnToClick = self.browser.find_element(By.XPATH, selection)
+                btnToClick.click()
+                WebDriverWait(self.browser, 10).until(
+                    EC.presence_of_all_elements_located((By.XPATH, "//*[@id='content']/div[2]/a/span")))
+                level = int(re.search(r'\d+',self.browser.find_element_by_xpath("//*[@id='content']/span").text).group())
+                self._stationLevels[building] = level
+            if building == 'Laboratory':
+                selection = "//a[@ref='" + self._station[building] + "']"
+                btnToClick = self.browser.find_element(By.XPATH, selection)
+                btnToClick.click()
+                WebDriverWait(self.browser, 10).until(
+                    EC.presence_of_all_elements_located((By.XPATH, "//*[@id='content']/div[2]/a")))
+                level = int(re.search(r'\d+',self.browser.find_element_by_xpath("//*[@id='content']/span").text).group())
+                self._stationLevels[building] = level
+
+        for element in self._resourcesLevels:
+            print(element)
+            print(self._resourcesLevels[element])
+        for element in self._stationLevels:
+            print(element)
+            print(self._stationLevels[element])
 
     def getInfoTechnology(self):
         pass
@@ -70,24 +122,20 @@ class OgameBot:
         self.current_scope = page
 
     def build(self, building):
-        resources = {'MetalMine': '1', 'CrystalMine': '2', 'DeuterExtractor': '3', 'SolarPowerPlant': '4',
-                     'FusionPowerPlant': '12', 'SolarSatellite': '212', 'MetalStorage': '22', 'CrystalStorage': '23',
-                     'DeuterStorage': '24'}
-        station = {'RobotFactory': '14', 'Shipyard': '21', 'Laboratory': '31', 'AllayDepot': '34', 'RocketSilo': '44',
-                   'NaniteFactory': '15', 'Terraformer': '33', 'SpaceDock': '36'}
 
-        if building in resources:
+
+        if building in self._resources:
             self.setScope('resources')
-            selection = "//a[@ref='" + resources[building] + "']"
+            selection = "//a[@ref='" + self._resources[building] + "']"
             btnToClick = self.browser.find_element(By.XPATH, selection)
             btnToClick.click()
             WebDriverWait(self.browser, 10).until(
                 EC.presence_of_all_elements_located((By.XPATH, "//*[@id='content']/div[2]/a")))
             build = self.browser.find_element(By.XPATH, "//*[@id='content']/div[2]/a")
             build.click()
-        if building in station:
+        if building in self._station:
             self.setScope('station')
-            selection = "//a[@ref='" + station[building] + "']"
+            selection = "//a[@ref='" + self._station[building] + "']"
             btnToClick = self.browser.find_element(By.XPATH, selection)
             btnToClick.click()
             WebDriverWait(self.browser, 10).until(
