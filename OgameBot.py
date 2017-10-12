@@ -6,26 +6,27 @@ import time
 
 
 class OgameBot:
-    def _getInfoResources(self):
+    def getInfoResources(self):
         pass
 
-    def _getInfoBuildings(self):
+    def getInfoBuildings(self):
         pass
 
-    def _getInfoTechnology(self):
+    def getInfoTechnology(self):
         pass
 
-    def _getInfoSizeOfPlanet(self):
+    def getInfoSizeOfPlanet(self):
         pass
 
-    def _getInfoPlanetNumber(self):
+    def getInfoPlanetNumber(self):
         pass
 
-    def _launchBrowser(self):
+    def launchBrowser(self):
         self.browser = webdriver.Chrome()
         self.browser.get(('https://pl.ogame.gameforge.com/'))
 
-    def _login(self, login, password, universe):
+
+    def login(self,login,password,universe):
         commercialCloseButton = self.browser.find_element(By.XPATH,"//a[@href='javascript:;']")
         LoginWindowOpen = self.browser.find_element_by_id('loginBtn')
         usernameField = self.browser.find_element_by_id('usernameLogin')
@@ -46,14 +47,57 @@ class OgameBot:
         print(universe)
         loginButton.click()
 
-    def _botWait(self):
+    def botWait(self):
         time.sleep(1)
 
-    def changeScope(self):
-        pass
+    def changeScope(self, page):
+        if page == 'overview':
+            self.browser.get("https://s147-pl.ogame.gameforge.com/game/index.php?page=overview")
+        if page == 'resources':
+            self.browser.get("https://s147-pl.ogame.gameforge.com/game/index.php?page=resources")
+        if page == 'station':
+            self.browser.get("https://s147-pl.ogame.gameforge.com/game/index.php?page=station")
+        if page == 'trader':
+            self.browser.get("https://s147-pl.ogame.gameforge.com/game/index.php?page=traderOverview")
+        if page == 'research':
+            self.browser.get("https://s147-pl.ogame.gameforge.com/game/index.php?page=research")
+        if page == 'shipyard':
+            self.browser.get("https://s147-pl.ogame.gameforge.com/game/index.php?page=shipyard")
+        if page == 'defense':
+            self.browser.get("https://s147-pl.ogame.gameforge.com/game/index.php?page=defense")
+        if page == 'fleet':
+            self.browser.get("https://s147-pl.ogame.gameforge.com/game/index.php?page=fleet1")
+        if page == 'galaxy':
+            self.browser.get("https://s147-pl.ogame.gameforge.com/game/index.php?page=galaxy")
+        if page == 'highScore':
+            self.browser.get("https://s147-pl.ogame.gameforge.com/game/index.php?page=highscore")
+
+    def build(self, building):
+        resources = {'MetalMine': '1', 'CrystalMine' : '2' ,'DeuterExtractor' : '3', 'SolarPowerPlant' : '4',
+                     'FusionPowerPlant' : '12', 'SolarSatellite' : '212', 'MetalStorage' : '22', 'CrystalStorage' : '23', 'DeuterStorage' : '24'}
+        station = {'RobotFactory' : '14', 'Shipyard' : '21', 'Laboratory' : '31','AllayDepot' : '34' , 'RocketSilo' : '44', 'NaniteFactory' : '15', 'Terraformer' : '33', 'SpaceDock' : '36'}
+
+        if building in resources:
+            self.changeScope('resources')
+            selection = "//a[@ref='" + resources[building] + "']"
+            btnToClick = self.browser.find_element(By.XPATH,selection)
+            btnToClick.click()
+            WebDriverWait(self.browser, 10).until(EC.presence_of_all_elements_located((By.XPATH,"//*[@id='content']/div[2]/a")))
+            build = self.browser.find_element(By.XPATH,"//*[@id='content']/div[2]/a")
+            build.click()
+        if building in station:
+            self.changeScope('station')
+            selection = "//a[@ref='" + station[building] + "']"
+            btnToClick = self.browser.find_element(By.XPATH,selection)
+            btnToClick.click()
+            WebDriverWait(self.browser, 10).until(EC.presence_of_all_elements_located((By.XPATH, "//*[@id='content'']/div[2]/a")))
+            build = self.browser.find_element(By.XPATH, "//*[@id='content']/div[2]/a")
+            build.click()
 
     # TODO
 
 
 
 """login: michael93509@gmail.com password: oOunv72Pg744nd2d45zo: universe: Uriel"""
+
+
