@@ -14,11 +14,18 @@ class OgameBot:
         self._station = {'RobotFactory': '14', 'Shipyard': '21', 'Laboratory': '31', 'AllayDepot': '34', 'RocketSilo': '44',
                          'NaniteFactory': '15', 'Terraformer': '33', 'SpaceDock': '36'}
 
+        self._research = {'EnergyTechnology': '113', 'LaserTechnology':'120', 'IonTechnology':'121', 'HyperspaceTechnology': '114',
+                 'PlasmaTechnology': '122', 'CombustionDrive': '115', 'ImpulseDrive': '117', 'HyperDrive': '118',
+                 'SpyTechnology':'106','ComputerTechnology':'108','Astrophysics':'124','IntergalacticResearchNetwork':'123',
+                 'GravitonDevelopment':'199','BattleTechnology':'109','ShieldingTechnology':'110','Armor':'111'}
+
         self._planetNumber = 0
         self._planetSize = 0
         self.current_scope = ""
 
+
         self.mainPlanetState = PlanetState()
+
 
     def getInfoResources(self):
         self.setScope('overview')
@@ -65,7 +72,7 @@ class OgameBot:
                 self.mainPlanetState.set(building, level)
 
     def getInfoTechnology(self):
-        pass
+        self.setScope('research')
 
     def getInfoSizeOfPlanet(self):
         self.setScope('overview')
@@ -75,6 +82,7 @@ class OgameBot:
 
     def getInfoPlanetNumber(self):
         self.setScope('overview')
+        self.botWait()
         string = self.browser.find_element_by_xpath("//*[@id='countColonies']/p/span").text
         self._planetNumber=string[2]
 

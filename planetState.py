@@ -19,9 +19,9 @@ class PlanetState:
 
         "RobotFactory",
         "Shipyard",
-        "Labolatory",
+        "Laboratory",
         "AllayDepot",
-        "RocketSile",
+        "RocketSilo",
         "NaniteFactory",
         "Terraformer",
         "SpaceDock"]
