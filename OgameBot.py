@@ -62,15 +62,35 @@ class OgameBot:
             self.browser.get("https://s147-pl.ogame.gameforge.com/game/index.php?page=fleet1")
         if page == 'galaxy':
             self.browser.get("https://s147-pl.ogame.gameforge.com/game/index.php?page=galaxy")
-        if page == 'highscore':
+        if page == 'highScore':
             self.browser.get("https://s147-pl.ogame.gameforge.com/game/index.php?page=highscore")
 
-
     def build(self, building):
-        resources = {'MetalMine' : "//a[@title_ref='2']" , 'Crystal'}
-        station = {}
+        resources = {'MetalMine': '1', 'CrystalMine' : '2' ,'DeuterExtractor' : '3', 'SolarPowerPlant' : '4',
+                     'FusionPowerPlant' : '12', 'SolarSatellite' : '212', 'MetalStorage' : '22', 'CrystalStorage' : '23', 'DeuterStorage' : '24'}
+        station = {'RobotFactory' : '14', 'Shipyard' : '21', 'Laboratory' : '31','AllayDepot' : '34' , 'RocketSilo' : '44', 'NaniteFactory' : '15', 'Terraformer' : '33', 'SpaceDock' : '36'}
+
+        if building in resources:
+            self.changeScope('resources')
+            selection = "//a[@ref='" + resources[building] + "']"
+            btnToClick = self.browser.find_element(By.XPATH,selection)
+            btnToClick.click()
+            WebDriverWait(self.browser, 10).until(EC.presence_of_all_elements_located((By.XPATH,"//*[@id='content']/div[2]/a")))
+            build = self.browser.find_element(By.XPATH,"//*[@id='content']/div[2]/a")
+            build.click()
+        if building in station:
+            self.changeScope('station')
+            selection = "//a[@ref='" + station[building] + "']"
+            btnToClick = self.browser.find_element(By.XPATH,selection)
+            btnToClick.click()
+            WebDriverWait(self.browser, 10).until(EC.presence_of_all_elements_located((By.XPATH, "//*[@id='content'']/div[2]/a")))
+            build = self.browser.find_element(By.XPATH, "//*[@id='content']/div[2]/a")
+            build.click()
+
     # TODO
 
 
 
 """login: michael93509@gmail.com password: oOunv72Pg744nd2d45zo: universe: Uriel"""
+
+
