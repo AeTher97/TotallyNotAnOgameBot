@@ -25,7 +25,7 @@ class OgameBot:
         self.browser = webdriver.Chrome()
         self.browser.get(('https://pl.ogame.gameforge.com/'))
 
-    def _login(self,login,password,universe):
+    def _login(self, login, password, universe):
         commercialCloseButton = self.browser.find_element(By.XPATH,"//a[@href='javascript:;']")
         LoginWindowOpen = self.browser.find_element_by_id('loginBtn')
         usernameField = self.browser.find_element_by_id('usernameLogin')
@@ -35,9 +35,15 @@ class OgameBot:
 
         commercialCloseButton.click()
         LoginWindowOpen.click()
-        usernameField.send_keys(login)
-        passwordField.send_keys(password)
+        for i in login:
+            usernameField.send_keys(i)
+        for i in password:
+            passwordField.send_keys(i)
         serverField.send_keys(universe)
+
+        print(login)
+        print(password)
+        print(universe)
         loginButton.click()
 
     def _botWait(self):
