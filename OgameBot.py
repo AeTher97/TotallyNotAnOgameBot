@@ -55,7 +55,7 @@ class OgameBot:
                        'Destroyer': '213',
                        'DeathStar': '214',
                        'Recycler': '209',
-                       'SpySatellite': '210',
+                       'SpyProbe': '210',
                        'SolarSatellite': '212'}
 
         self._defense = {'RocketLauncher': '401',

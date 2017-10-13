@@ -61,7 +61,7 @@ class PlanetState:
         'Destroyer',
         'DeathStar',
         'Recycler',
-        'SpySatellite',
+        'SpyProbe',
         'SolarSatellite'
 
         'RocketLauncher',
