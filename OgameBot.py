@@ -197,6 +197,7 @@ class OgameBot:
 
     def launchBrowser(self):
         self.browser = webdriver.Chrome()
+        self.browser.maximize_window()
         self.browser.get(('https://pl.ogame.gameforge.com/'))
 
     def login(self, login, password, universe):
@@ -296,7 +297,58 @@ class OgameBot:
                 build = self.browser.find_element(By.XPATH, "//*[@id='content']/div[3]/a/span")
                 build.click()
 
-    def SetSpySatelliteCount(self, number):
+    def buildCancel(self, somethingToCancel):
+        if somethingToCancel in self._resources:
+            self.setScope('resources')
+
+            WebDriverWait(self.browser, 10).until(
+                EC.presence_of_all_elements_located((By.XPATH, "//*[@id='inhalt']/div[5]/div[2]/table/tbody/tr[2]/td[1]/div/a[2]/img")))
+
+            cancel = self.browser.find_element_by_xpath("//*[@id='inhalt']/div[5]/div[2]/table/tbody/tr[2]/td[1]/div/a[2]/img")
+            cancel.click()
+
+        if somethingToCancel in self._station:
+            self.setScope('resources')
+
+            WebDriverWait(self.browser, 10).until(
+                EC.presence_of_all_elements_located(
+                    (By.XPATH, "//*[@id='inhalt']/div[5]/div[2]/table/tbody/tr[2]/td[1]/div/a[2]/img")))
+
+            cancel = self.browser.find_element_by_xpath(
+                "//*[@id='inhalt']/div[5]/div[2]/table/tbody/tr[2]/td[1]/div/a[2]/img")
+            cancel.click()
+
+        if somethingToCancel in self._research:
+            self.setScope('research')
+            selection = "//a[@ref='" + self._research[somethingToCancel] + "']"
+            btnToClick = self.browser.find_element(By.XPATH, selection)
+            btnToClick.click()
+            WebDriverWait(self.browser, 10).until(
+                EC.presence_of_all_elements_located((By.XPATH, "//*[@id='content']/span")))
+            cancel = self.browser.find_element_by_class_name("tooltip abort_link js_hideTipOnMobile")
+            cancel.click()
+
+        if somethingToCancel in self._fleet:
+            self.setScope('shipyard')
+            selection = "//a[@ref='" + self._fleet[somethingToCancel] + "']"
+            btnToClick = self.browser.find_element(By.XPATH, selection)
+            btnToClick.click()
+            WebDriverWait(self.browser, 10).until(
+                EC.presence_of_all_elements_located((By.ID, "number")))
+            cancel = self.browser.find_element_by_class_name("tooltip abort_link js_hideTipOnMobile")
+            cancel.click()
+
+        if somethingToCancel in self._defense:
+            self.setScope('defense')
+            selection = "//a[@ref='" + self._defense[somethingToCancel] + "']"
+            btnToClick = self.browser.find_element(By.XPATH, selection)
+            btnToClick.click()
+            WebDriverWait(self.browser, 10).until(
+                EC.presence_of_all_elements_located((By.ID, "number")))
+            cancel = self.browser.find_element_by_class_name("tooltip abort_link js_hideTipOnMobile")
+            cancel.click()
+
+    def setSpySatelliteCount(self, number):
         self.setScope('preferences')
         overall = self.browser.find_element(By.XPATH, '//*[@id="tabs-pref"]/li[2]')
         overall.click()

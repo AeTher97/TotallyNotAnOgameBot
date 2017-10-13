@@ -8,16 +8,11 @@ testing = OgameBot()
 
 testing.launchBrowser()
 testing.login('michael93509@gmail.com','oOunv72Pg744nd2d45zo','Uriel')
-testing.getInfoResources()
-testing.getInfoPlanetNumber()
-testing.getInfoSizeOfPlanet()
-testing.getInfoPlanetTemperature()
-testing.getInfoPlanetPosition()
 
 
 
 
-testing.SetSpySatelliteCount(10)
+testing.buildCancel('CrystalMine')
 
 
 print(testing.mainPlanetState)
