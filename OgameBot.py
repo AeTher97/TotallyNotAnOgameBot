@@ -23,6 +23,9 @@ class OgameBot:
                        'HeavyTransport': '203', 'ColonizationShip': '208', 'Dreadnought': '215', 'Bomber': '211', 'Destroyer': '213',
                        'DeathStar': '214', 'Recycler': '209', 'SpySatellite': '210', 'SolarSatellite': '212'}
 
+        self._defense = {'RocketLauncher': '401', 'LightLaserCannon': '402', 'HeavyLaserCannon': '403', 'GaussCannon': '404', 'IonCannon': '405',
+                         'PlasmaLauncher': '406', 'SmallPlanetaryShield': '407', 'LargePlanetaryShield': '408', 'AntiMissile': '502', 'InterplanetaryMissile': '503'}
+
 
         self.current_scope = ""
 
@@ -92,6 +95,19 @@ class OgameBot:
 
             number = int(re.search(r'\d+', self.browser.find_element_by_xpath("//*[@id='content']/span").text).group())
             self.mainPlanetState.set(ship, number)
+
+    def getInfoDefenses(self):
+        self.setScope('defense')
+
+        for defense in self._defense:
+            selection = "//a[@ref='" + self._defense[defense] + "']"
+            btnToClick = self.browser.find_element(By.XPATH, selection)
+            btnToClick.click()
+            WebDriverWait(self.browser, 10).until(
+                EC.presence_of_all_elements_located((By.ID, "number")))
+
+            number = int(re.search(r'\d+', self.browser.find_element_by_xpath("//*[@id='content']/span").text).group())
+            self.mainPlanetState.set(defense, number)
 
 
     def getInfoSizeOfPlanet(self):
@@ -203,6 +219,5 @@ class OgameBot:
             # TODO
 
 
-"""login: michael93452@gmail.com password: testing1234 universe: Wezn"""
 
 

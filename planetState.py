@@ -64,6 +64,17 @@ class PlanetState:
         'Recycler',
         'SpySatellite',
         'SolarSatellite'
+
+        'RocketLauncher',
+        'LightLaserCannon',
+        'HeavyLaserCannon',
+        'GaussCannon',
+        'IonCannon',
+        'PlasmaLauncher',
+        'SmallPlanetaryShield',
+        'LargePlanetaryShield',
+        'AntiMissile',
+        'InterplanetaryMissile'
         ]
 
         for i in self._attributes:

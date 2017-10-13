@@ -14,3 +14,4 @@ testing.getInfoPlanetPosition()
 
 print(testing.mainPlanetState)
 
+"""login: michael93452@gmail.com password: testing1234 universe: Wezn"""
