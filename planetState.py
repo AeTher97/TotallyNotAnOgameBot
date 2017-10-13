@@ -53,7 +53,6 @@ class PlanetState:
 
         # defenses
         # ships
-        # technology
 
     def set(self, attr_name, value):
         """
@@ -82,7 +81,8 @@ class PlanetState:
         :return: if every attribute is greater or equal return True, otherwise return False
         """
         for i in self._attributes:
-            if getattr(self, i) < getattr(other, i):
-                return False
+            if i != "time"
+                if getattr(self, i) < getattr(other, i):
+                    return False
         return True
 
