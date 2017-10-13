@@ -19,12 +19,10 @@ class OgameBot:
                  'SpyTechnology':'106','ComputerTechnology':'108','Astrophysics':'124','IntergalacticResearchNetwork':'123',
                  'GravitonDevelopment':'199','BattleTechnology':'109','ShieldingTechnology':'110','Armor':'111'}
 
-
         self.current_scope = ""
 
-
         self.mainPlanetState = PlanetState()
-
+        self.planetNumber = 0
 
     def getInfoResources(self):
         self.setScope('overview')
@@ -94,7 +92,7 @@ class OgameBot:
             EC.presence_of_all_elements_located((By.XPATH,"//*[@id='countColonies']/p/span")))
         string = self.browser.find_element(By.XPATH,"//*[@id='countColonies']/p/span").text
         planetNumber=string[2]
-        self.mainPlanetState.set('PlanetNumber', planetNumber)
+        self.planetNumber = planetNumber
 
     def launchBrowser(self):
         self.browser = webdriver.Chrome()
