@@ -101,6 +101,27 @@ class OgameBot:
         planetSize = self.browser.find_element(By.XPATH,"//*[@id='diameterContentField']/span[2]").text
         self.mainPlanetState.set('PlanetSize', planetSize)
 
+    def getInfoPlanetTemperature(self):
+        self.setScope('overview')
+        WebDriverWait(self.browser, 10).until(
+            EC.presence_of_all_elements_located((By.XPATH, "//*[@id='temperatureContentField']")))
+        temperature = self.browser.find_element(By.XPATH,"//*[@id='temperatureContentField']").text
+        Edges = re.findall(r'\d+',temperature)
+        average=(int(Edges[0])+int(Edges[1]))/2
+        self.mainPlanetState.set('temperature', average)
+
+    def getInfoPlanetPosition(self):
+        self.setScope('overview')
+        WebDriverWait(self.browser, 10).until(
+            EC.presence_of_all_elements_located((By.XPATH, "//*[@id='positionContentField']/a")))
+        positionString = self.browser.find_element(By.XPATH,"//*[@id='positionContentField']/a").text
+
+        numbers = re.findall(r'\d+',positionString)
+        self.mainPlanetState.set('Galaxy',numbers[0])
+        self.mainPlanetState.set('Star',numbers[1])
+        self.mainPlanetState.set('Planet',numbers[2])
+
+
     def logout(self):
         self.setScope('logout')
 

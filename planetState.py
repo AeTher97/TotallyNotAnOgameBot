@@ -6,8 +6,13 @@ class PlanetState:
         "crystal",
         "deuter",
         "energy",
+        "temperature",
 
         "PlanetSize",
+
+        "Galaxy",
+        "Star",
+        "Planet",
 
         "MetalMine",
         "CrystalMine",
@@ -94,7 +99,7 @@ class PlanetState:
         :return: if every attribute is greater or equal return True, otherwise return False
         """
         for i in self._attributes:
-            if i != "time"
+            if i != "time":
                 if getattr(self, i) < getattr(other, i):
                     return False
         return True
