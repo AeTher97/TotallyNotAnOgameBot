@@ -65,6 +65,44 @@ class PlanetState:
                 return True
         raise ValueError("There is no attribute named: " + str(attr_name))
 
+    def set_min(self, attr_name, value):
+        """
+        sets attribute to value if given value is greater than current one
+        :param attr_name: string
+        :param value: integer
+        :raises: ValueError if couldn't find attribute of given name
+        :return: True if everything went well
+        """
+        for i in self._attributes:
+            if attr_name == i:
+                if getattr(self, attr_name) < value:
+                    setattr(self, attr_name, value)
+                return True
+        raise ValueError("There is no attribute named: " + str(attr_name))
+
+    def get(self, attr_name):
+        """
+        :param attr_name: string
+        :return: value
+        """
+        for i in self._attributes:
+            if attr_name == i:
+                return getattr(self, attr_name)
+        raise ValueError("There is no attribute named: " + str(attr_name))
+
+    def add(self, attr_name, value):
+        """
+        :param attr_name: string
+        :param value: integer
+        :raises: ValueError if couldn't find attribute of given name
+        :return: True if everything went well
+        """
+        for i in self._attributes:
+            if attr_name == i:
+                setattr(self, attr_name, value + getattr(self, attr_name))
+                return True
+        raise ValueError("There is no attribute named: " + str(attr_name))
+
     def __str__(self):
         result = str()
         for i in self._attributes:
@@ -79,7 +117,7 @@ class PlanetState:
         :return: if every attribute is greater or equal return True, otherwise return False
         """
         for i in self._attributes:
-            if i != "time"
+            if i != "time":
                 if getattr(self, i) < getattr(other, i):
                     return False
         return True
