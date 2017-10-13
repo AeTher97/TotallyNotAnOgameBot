@@ -8,8 +8,6 @@ class PlanetState:
         "energy",
 
         "PlanetSize",
-        "PlanetNumber",
-
 
         "MetalMine",
         "CrystalMine",
