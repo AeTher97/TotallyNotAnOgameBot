@@ -6,15 +6,19 @@ class PlanetState:
         "crystal",
         "deuter",
         "energy",
+        "temperature",
 
         "PlanetSize",
+
+        "Galaxy",
+        "Star",
+        "Planet",
 
         "MetalMine",
         "CrystalMine",
         "DeuterExtractor",
         "SolarPowerPlant",
         "FusionPowerPlant",
-        "SolarSatellite",
         "MetalStorage",
         "CrystalStorage",
         "DeuterStorage",
@@ -43,7 +47,33 @@ class PlanetState:
         "GravitonDevelopment",
         "BattleTechnology",
         "ShieldingTechnology",
-        "Armor"
+        "Armor",
+
+        'LightFigher',
+        'HeavyFigher',
+        'Cruiser',
+        'Battleship',
+        'LightTransport',
+        'HeavyTransport',
+        'ColonizationShip',
+        'Dreadnought',
+        'Bomber',
+        'Destroyer',
+        'DeathStar',
+        'Recycler',
+        'SpySatellite',
+        'SolarSatellite'
+
+        'RocketLauncher',
+        'LightLaserCannon',
+        'HeavyLaserCannon',
+        'GaussCannon',
+        'IonCannon',
+        'PlasmaLauncher',
+        'SmallPlanetaryShield',
+        'LargePlanetaryShield',
+        'AntiMissile',
+        'InterplanetaryMissile'
         ]
 
         for i in self._attributes:
