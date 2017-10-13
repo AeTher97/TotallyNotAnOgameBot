@@ -193,26 +193,59 @@ class OgameBot:
             self.browser.get("https://s"+uninumber+"-pl.ogame.gameforge.com/game/index.php?page=" + page)
         self.current_scope = page
 
-    def build(self, building):
+    def build(self, thing):
 
 
-        if building in self._resources:
+        if thing in self._resources:
             self.setScope('resources')
-            selection = "//a[@ref='" + self._resources[building] + "']"
+            selection = "//a[@ref='" + self._resources[thing] + "']"
             btnToClick = self.browser.find_element(By.XPATH, selection)
             btnToClick.click()
             WebDriverWait(self.browser, 10).until(
                 EC.presence_of_all_elements_located((By.XPATH, "//*[@id='content']/div[2]/a")))
             build = self.browser.find_element(By.XPATH, "//*[@id='content']/div[2]/a")
             build.click()
-        if building in self._station:
+        if thing in self._station:
             self.setScope('station')
-            selection = "//a[@ref='" + self._station[building] + "']"
+            selection = "//a[@ref='" + self._station[thing] + "']"
             btnToClick = self.browser.find_element(By.XPATH, selection)
             btnToClick.click()
             WebDriverWait(self.browser, 10).until(
                 EC.presence_of_all_elements_located((By.XPATH, "//*[@id='content'']/div[2]/a")))
             build = self.browser.find_element(By.XPATH, "//*[@id='content']/div[2]/a")
+            build.click()
+        if thing in self._research:
+            self.setScope('research')
+            selection = "//a[@ref='" + self._research[thing] + "']"
+            btnToClick = self.browser.find_element(By.XPATH, selection)
+            btnToClick.click()
+            WebDriverWait(self.browser, 10).until(
+                EC.presence_of_all_elements_located((By.XPATH, "//*[@id='content'']/div[2]/a")))
+            build = self.browser.find_element(By.XPATH, "//*[@id='content']/div[2]/a")
+            build.click()
+
+    def build(self,thing, number):
+        if thing in self._fleet:
+            self.setScope('shipyard')
+            selection = "//a[@ref='" + self._research[thing] + "']"
+            btnToClick = self.browser.find_element(By.XPATH, selection)
+            btnToClick.click()
+            WebDriverWait(self.browser, 10).until(
+                EC.presence_of_all_elements_located((By.ID, "number")))
+            numberField = self.browser.find_element_by_id('number')
+            numberField.send_keys(number)
+            build = self.browser.find_element(By.XPATH,"//*[@id='content']/div[3]/a/span")
+            build.click()
+        if thing in self._defense:
+            self.setScope('defense')
+            selection = "//a[@ref='" + self._defense[thing] + "']"
+            btnToClick = self.browser.find_element(By.XPATH, selection)
+            btnToClick.click()
+            WebDriverWait(self.browser, 10).until(
+                EC.presence_of_all_elements_located((By.ID, "number")))
+            numberField = self.browser.find_element_by_id('number')
+            numberField.send_keys(number)
+            build = self.browser.find_element(By.XPATH, "//*[@id='content']/div[3]/a/span")
             build.click()
 
 
