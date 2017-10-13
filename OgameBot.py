@@ -26,9 +26,8 @@ class OgameBot:
 
         self.current_scope = ""
 
-
         self.mainPlanetState = PlanetState()
-
+        self.planetNumber = 0
 
     def getInfoResources(self):
         self.setScope('overview')
@@ -62,7 +61,7 @@ class OgameBot:
             btnToClick = self.browser.find_element(By.XPATH, selection)
             btnToClick.click()
             WebDriverWait(self.browser, 10).until(
-                EC.presence_of_all_elements_located((By.XPATH, "//*[@id='content']/div[2]/a")))
+                EC.presence_of_all_elements_located((By.XPATH, "//*[@id='content']/div[2]/a/span")))
             level = int(re.search(r'\d+',self.browser.find_element_by_xpath("//*[@id='content']/span").text).group())
             self.mainPlanetState.set(building, level)
 
@@ -71,11 +70,12 @@ class OgameBot:
         self.setScope('research')
 
         for research in self._research:
+
             selection = "//a[@ref='" + self._research[research] + "']"
             btnToClick = self.browser.find_element(By.XPATH, selection)
             btnToClick.click()
             WebDriverWait(self.browser, 10).until(
-                 EC.presence_of_all_elements_located((By.XPATH, "//*[@id='content']/div[2]/a/span")))
+                 EC.presence_of_all_elements_located((By.XPATH, "//*[@id='content']/div[2]/a")))
 
             level = int(re.search(r'\d+', self.browser.find_element_by_xpath("//*[@id='content']/span").text).group())
             self.mainPlanetState.set(research, level)
@@ -112,7 +112,7 @@ class OgameBot:
             EC.presence_of_all_elements_located((By.XPATH,"//*[@id='countColonies']/p/span")))
         string = self.browser.find_element(By.XPATH,"//*[@id='countColonies']/p/span").text
         planetNumber=string[2]
-        self.mainPlanetState.set('PlanetNumber', planetNumber)
+        self.planetNumber = planetNumber
 
     def launchBrowser(self):
         self.browser = webdriver.Chrome()
