@@ -1,4 +1,7 @@
 from OgameBot import OgameBot
+from Requirements import getRequirementsTech
+from planetState import PlanetState
+
 
 
 testing = OgameBot()
@@ -9,15 +12,13 @@ testing.getInfoResources()
 testing.getInfoPlanetNumber()
 testing.getInfoSizeOfPlanet()
 testing.getInfoPlanetTemperature()
-
 testing.getInfoPlanetPosition()
 
 
 
-testing.build("RocketLauncher",1)
-testing.botWait()
-testing.botWait()
-testing.build('SolarSatellite',1)
+
+testing.SetSpySatelliteCount(10)
+
 
 print(testing.mainPlanetState)
 

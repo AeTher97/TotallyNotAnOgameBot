@@ -126,7 +126,7 @@ class OgameBot:
         Edges = re.findall(r'\d+',temperature)
         if temperature[3]=='-':
             Edges[0]='-'+Edges[0]
-        print(temperature)
+
         average=(int(Edges[0])+int(Edges[1]))/2
         self.mainPlanetState.set('temperature', average)
 
@@ -254,6 +254,17 @@ class OgameBot:
                 numberField.send_keys(number)
                 build = self.browser.find_element(By.XPATH, "//*[@id='content']/div[3]/a/span")
                 build.click()
+
+    def SetSpySatelliteCount(self,number):
+        self.setScope('preferences')
+        overall = self.browser.find_element(By.XPATH,'//*[@id="tabs-pref"]/li[2]')
+        overall.click()
+        WebDriverWait(self.browser, 10).until(
+            EC.presence_of_all_elements_located((By.XPATH, "//*[@id='two']/div[2]/div/div/input")))
+        numberField = self.browser.find_element(By.XPATH,'//*[@id="two"]/div[2]/div/div/input')
+        numberField.send_keys(number)
+        accept = self.browser.find_element_by_xpath("//*[@id='prefs']/div[1]/div[5]/input")
+        accept.click()
 
 
             # TODO
