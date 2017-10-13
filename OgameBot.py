@@ -19,8 +19,7 @@ class OgameBot:
                  'SpyTechnology':'106','ComputerTechnology':'108','Astrophysics':'124','IntergalacticResearchNetwork':'123',
                  'GravitonDevelopment':'199','BattleTechnology':'109','ShieldingTechnology':'110','Armor':'111'}
 
-        self._planetNumber = 0
-        self._planetSize = 0
+
         self.current_scope = ""
 
 
@@ -54,37 +53,48 @@ class OgameBot:
 
         self.setScope('station')
         for building in self._station:
-            if building!='Laboratory':
-                selection = "//a[@ref='" + self._station[building] + "']"
-                btnToClick = self.browser.find_element(By.XPATH, selection)
-                btnToClick.click()
-                WebDriverWait(self.browser, 10).until(
-                    EC.presence_of_all_elements_located((By.XPATH, "//*[@id='content']/div[2]/a/span")))
-                level = int(re.search(r'\d+',self.browser.find_element_by_xpath("//*[@id='content']/span").text).group())
-                self.mainPlanetState.set(building, level)
-            if building == 'Laboratory':
-                selection = "//a[@ref='" + self._station[building] + "']"
-                btnToClick = self.browser.find_element(By.XPATH, selection)
-                btnToClick.click()
-                WebDriverWait(self.browser, 10).until(
-                    EC.presence_of_all_elements_located((By.XPATH, "//*[@id='content']/div[2]/a")))
-                level = int(re.search(r'\d+',self.browser.find_element_by_xpath("//*[@id='content']/span").text).group())
-                self.mainPlanetState.set(building, level)
+
+            selection = "//a[@ref='" + self._station[building] + "']"
+            btnToClick = self.browser.find_element(By.XPATH, selection)
+            btnToClick.click()
+            WebDriverWait(self.browser, 10).until(
+                EC.presence_of_all_elements_located((By.XPATH, "//*[@id='content']/div[2]/a/span")))
+            level = int(re.search(r'\d+',self.browser.find_element_by_xpath("//*[@id='content']/span").text).group())
+            self.mainPlanetState.set(building, level)
+
 
     def getInfoTechnology(self):
         self.setScope('research')
+        for research in self._research:
+
+            selection = "//a[@ref='" + self._research[research] + "']"
+            btnToClick = self.browser.find_element(By.XPATH, selection)
+            btnToClick.click()
+            WebDriverWait(self.browser, 10).until(
+                 EC.presence_of_all_elements_located((By.XPATH, "//*[@id='content']/div[2]/a")))
+
+            level = int(re.search(r'\d+', self.browser.find_element_by_xpath("//*[@id='content']/span").text).group())
+            self.mainPlanetState.set(research, level)
 
     def getInfoSizeOfPlanet(self):
         self.setScope('overview')
-        self._planetSize = self.browser.find_element_by_xpath("//*[@id='diameterContentField']/span[2]").text
-        print(self._planetSize)
+        WebDriverWait(self.browser,10).until(
+            EC.presence_of_all_elements_located((By.XPATH,"//*[@id='diameterContentField']/span[2]")))
+        planetSize = self.browser.find_element(By.XPATH,"//*[@id='diameterContentField']/span[2]").text
+        self.mainPlanetState.set('PlanetSize', planetSize)
+
+    def logout(self):
+        self.setScope('logout')
 
 
     def getInfoPlanetNumber(self):
         self.setScope('overview')
-        self.botWait()
-        string = self.browser.find_element_by_xpath("//*[@id='countColonies']/p/span").text
-        self._planetNumber=string[2]
+
+        WebDriverWait(self.browser,10).until(
+            EC.presence_of_all_elements_located((By.XPATH,"//*[@id='countColonies']/p/span")))
+        string = self.browser.find_element(By.XPATH,"//*[@id='countColonies']/p/span").text
+        planetNumber=string[2]
+        self.mainPlanetState.set('PlanetNumber', planetNumber)
 
     def launchBrowser(self):
         self.browser = webdriver.Chrome()

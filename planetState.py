@@ -7,6 +7,10 @@ class PlanetState:
         "deuter",
         "energy",
 
+        "PlanetSize",
+        "PlanetNumber",
+
+
         "MetalMine",
         "CrystalMine",
         "DeuterExtractor",
@@ -24,7 +28,25 @@ class PlanetState:
         "RocketSilo",
         "NaniteFactory",
         "Terraformer",
-        "SpaceDock"]
+        "SpaceDock",
+
+        "EnergyTechnology",
+        "LaserTechnology",
+        "IonTechnology",
+        "HyperspaceTechnology",
+        "PlasmaTechnology",
+        "CombustionDrive",
+        "ImpulseDrive",
+        "HyperDrive",
+        "SpyTechnology",
+        "ComputerTechnology",
+        "Astrophysics",
+        "IntergalacticResearchNetwork",
+        "GravitonDevelopment",
+        "BattleTechnology",
+        "ShieldingTechnology",
+        "Armor"
+        ]
 
         for i in self._attributes:
             setattr(self, i, 0)
