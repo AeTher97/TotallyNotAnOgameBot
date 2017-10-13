@@ -370,15 +370,6 @@ def getRequirementsTech(planet_state):
                 result.set_min("Laboratory", 6)
                 result.set_min("EnergyTechnology", 3)
 
-        if i == "Recycler":
-            if planet_state.get(i) > 0:
-                result.set_min("Shipyard", 4)
-                result.set_min("RobotFactory", 2)
-                result.set_min("CombustionDrive", 6)
-                result.set_min("ShieldingTechnology", 2)
-                result.set_min("Laboratory", 6)
-                result.set_min("EnergyTechnology", 3)
-
         if i == "SpyProbe":
             if planet_state.get(i) > 0:
                 result.set_min("Shipyard", 3)
@@ -474,6 +465,371 @@ def getRequirementsTech(planet_state):
                 result.set_min("ImpulseDrive", 1)
                 result.set_min("Laboratory", 2)
                 result.set_min("EnergyTechnology", 1)
+
+    return result
+
+def getRequirementsRes(current_state, wanted_state):
+    """
+    Returns how much resources you need to go from current state to wanted state.
+    Warning! It doesn't check if such transition is possible
+    :param current_state:
+    :param wanted_state:
+    :return: Current state with needed resources
+    """
+    result = Requirements()
+    for i in result._attributes:
+        if i == "metal":
+            result.set(i, wanted_state.get(i))
+        if i == "crystal":
+            result.set(i, wanted_state.get(i))
+        if i == "deuter":
+            result.set(i, wanted_state.get(i))
+        if i == "energy":
+            result.set(i, wanted_state.get(i))
+
+        if i == "MetalMine":
+            if wanted_state.get(i) > current_state.get(i):
+                for lvl in range(current_state.get(i) + 1, wanted_state.get(i) + 1):
+                    result.add("metal", math.floor(60 * math.pow(1.5, lvl - 1)))
+                    result.add("crystal", math.floor(15 * math.pow(1.5, lvl - 1)))
+                    result.add("energy", math.ceil(10 * lvl * math.pow(1.1, lvl)))
+
+        if i == "CrystalMine":
+            if wanted_state.get(i) > current_state.get(i):
+                for lvl in range(current_state.get(i) + 1, wanted_state.get(i) + 1):
+                    result.add("metal", math.floor(48 * math.pow(1.5, lvl - 1)))
+                    result.add("crystal", math.floor(24 * math.pow(1.5, lvl - 1)))
+                    result.add("energy", math.ceil(10 * lvl * math.pow(1.1, lvl)))
+
+        if i == "DeuterExtractor":
+            if wanted_state.get(i) > current_state.get(i):
+                for lvl in range(current_state.get(i) + 1, wanted_state.get(i) + 1):
+                    result.add("metal", math.floor(225 * math.pow(1.5, lvl - 1)))
+                    result.add("crystal", math.floor(75 * math.pow(1.5, lvl - 1)))
+                    result.add("energy", math.ceil(20 * lvl * math.pow(1.1, lvl)))
+
+        if i == "SolarPowerPlant":
+            if wanted_state.get(i) > current_state.get(i):
+                for lvl in range(current_state.get(i) + 1, wanted_state.get(i) + 1):
+                    result.add("metal", math.floor(75 * math.pow(1.5, lvl - 1)))
+                    result.add("crystal", math.floor(30 * math.pow(1.5, lvl - 1)))
+
+        if i == "FusionPowerPlant":
+            if wanted_state.get(i) > current_state.get(i):
+                for lvl in range(current_state.get(i) + 1, wanted_state.get(i) + 1):
+                    result.add("metal", math.floor(75 * math.pow(1.5, lvl - 1)))
+                    result.add("crystal", math.floor(30 * math.pow(1.5, lvl - 1)))
+
+        if i == "MetalStorage":
+            if wanted_state.get(i) > current_state.get(i):
+                for lvl in range(current_state.get(i) + 1, wanted_state.get(i) + 1):
+                    result.add("metal", math.floor(1000 * math.pow(2, lvl - 1)))
+
+
+        if i == "CrystalStorage":
+            if wanted_state.get(i) > current_state.get(i):
+                for lvl in range(current_state.get(i) + 1, wanted_state.get(i) + 1):
+                    result.add("metal", math.floor(1000 * math.pow(2, lvl - 1)))
+                    result.add("crystal", math.floor(500 * math.pow(2, lvl - 1)))
+
+        if i == "DeuterStorage":
+            if wanted_state.get(i) > current_state.get(i):
+                for lvl in range(current_state.get(i) + 1, wanted_state.get(i) + 1):
+                    result.add("metal", math.floor(1000 * math.pow(2, lvl - 1)))
+                    result.add("crystal", math.floor(1000 * math.pow(2, lvl - 1)))
+
+        # Station Buildings
+
+        if i == "RobotFactory":
+            if wanted_state.get(i) > current_state.get(i):
+                for lvl in range(current_state.get(i) + 1, wanted_state.get(i) + 1):
+                    result.add("metal", math.floor(400 * math.pow(2, lvl - 1)))
+                    result.add("crystal", math.floor(120 * math.pow(2, lvl - 1)))
+                    result.add("deuter", math.floor(200 * math.pow(2, lvl - 1)))
+
+        if i == "Shipyard":
+            if wanted_state.get(i) > current_state.get(i):
+                for lvl in range(current_state.get(i) + 1, wanted_state.get(i) + 1):
+                    result.add("metal", math.floor(400 * math.pow(2, lvl - 1)))
+                    result.add("crystal", math.floor(200 * math.pow(2, lvl - 1)))
+                    result.add("deuter", math.floor(100 * math.pow(2, lvl - 1)))
+
+        if i == "Laboratory":
+            if wanted_state.get(i) > current_state.get(i):
+                for lvl in range(current_state.get(i) + 1, wanted_state.get(i) + 1):
+                    result.add("metal", math.floor(200 * math.pow(2, lvl - 1)))
+                    result.add("crystal", math.floor(400 * math.pow(2, lvl - 1)))
+                    result.add("deuter", math.floor(200 * math.pow(2, lvl - 1)))
+
+        if i == "AllayDepot":
+            if wanted_state.get(i) > current_state.get(i):
+                for lvl in range(current_state.get(i) + 1, wanted_state.get(i) + 1):
+                    result.add("metal", math.floor(20000 * math.pow(2, lvl - 1)))
+                    result.add("crystal", math.floor(40000 * math.pow(2, lvl - 1)))
+
+        if i == "RocketSilo":
+            if wanted_state.get(i) > current_state.get(i):
+                for lvl in range(current_state.get(i) + 1, wanted_state.get(i) + 1):
+                    result.add("metal", math.floor(20000 * math.pow(2, lvl - 1)))
+                    result.add("crystal", math.floor(20000 * math.pow(2, lvl - 1)))
+                    result.add("deuter", math.floor(1000 * math.pow(2, lvl - 1)))
+
+        if i == "NaniteFactory":
+            if wanted_state.get(i) > current_state.get(i):
+                for lvl in range(current_state.get(i) + 1, wanted_state.get(i) + 1):
+                    result.add("metal", math.floor(1000000 * math.pow(2, lvl - 1)))
+                    result.add("crystal", math.floor(500000 * math.pow(2, lvl - 1)))
+                    result.add("deuter", math.floor(100000 * math.pow(2, lvl - 1)))
+
+        if i == "Terraformer":
+            if wanted_state.get(i) > current_state.get(i):
+                for lvl in range(current_state.get(i) + 1, wanted_state.get(i) + 1):
+                    result.add("crystal", math.floor(500000 * math.pow(2, lvl - 1)))
+                    result.add("deuter", math.ceil(100000 * math.pow(2, lvl - 1)))
+                # you need just max energy so we add it once
+                result.add("energy", math.floor(1000 * math.pow(2, wanted_state.get(i) - 1)))
+
+        if i == "SpaceDock":
+            if wanted_state.get(i) > current_state.get(i):
+                for lvl in range(current_state.get(i) + 1, wanted_state.get(i) + 1):
+                    result.add("metal", math.floor(200 * math.pow(5, lvl - 1)))
+                    result.add("deuter", math.floor(50 * math.pow(5, lvl - 1)))
+                # you need just max energy so we add it once
+                result.add("energy", math.floor(50 * math.pow(5, wanted_state.get(i) - 1)))
+
+        # Research
+
+        if i == "EnergyTechnology":
+            if wanted_state.get(i) > current_state.get(i):
+                for lvl in range(current_state.get(i) + 1, wanted_state.get(i) + 1):
+                    result.add("crystal", math.floor(800 * math.pow(2, lvl - 1)))
+                    result.add("deuter", math.floor(400 * math.pow(2, lvl - 1)))
+
+        if i == "LaserTechnology":
+            if wanted_state.get(i) > current_state.get(i):
+                for lvl in range(current_state.get(i) + 1, wanted_state.get(i) + 1):
+                    result.add("metal", math.floor(200 * math.pow(2, lvl - 1)))
+                    result.add("crystal", math.floor(100 * math.pow(2, lvl - 1)))
+
+        if i == "IonTechnology":
+            if wanted_state.get(i) > current_state.get(i):
+                for lvl in range(current_state.get(i) + 1, wanted_state.get(i) + 1):
+                    result.add("metal", math.floor(1000 * math.pow(2, lvl - 1)))
+                    result.add("crystal", math.floor(300 * math.pow(2, lvl - 1)))
+                    result.add("deuter", math.floor(100 * math.pow(2, lvl - 1)))
+
+        if i == "HyperspaceTechnology":
+            if wanted_state.get(i) > current_state.get(i):
+                for lvl in range(current_state.get(i) + 1, wanted_state.get(i) + 1):
+                    result.add("crystal", math.floor(4000 * math.pow(2, lvl - 1)))
+                    result.add("deuter", math.floor(2000 * math.pow(2, lvl - 1)))
+
+        if i == "PlasmaTechnology":
+            if wanted_state.get(i) > current_state.get(i):
+                for lvl in range(current_state.get(i) + 1, wanted_state.get(i) + 1):
+                    result.add("metal", math.floor(2000 * math.pow(2, lvl - 1)))
+                    result.add("crystal", math.floor(4000 * math.pow(2, lvl - 1)))
+                    result.add("deuter", math.floor(1000 * math.pow(2, lvl - 1)))
+
+        if i == "CombustionDrive":
+            if wanted_state.get(i) > current_state.get(i):
+                for lvl in range(current_state.get(i) + 1, wanted_state.get(i) + 1):
+                    result.add("metal", math.floor(400 * math.pow(2, lvl - 1)))
+                    result.add("deuter", math.floor(600 * math.pow(2, lvl - 1)))
+
+        if i == "ImpulseDrive":
+            if wanted_state.get(i) > current_state.get(i):
+                for lvl in range(current_state.get(i) + 1, wanted_state.get(i) + 1):
+                    result.add("metal", math.floor(2000 * math.pow(2, lvl - 1)))
+                    result.add("crystal", math.floor(4000 * math.pow(2, lvl - 1)))
+                    result.add("deuter", math.floor(600 * math.pow(2, lvl - 1)))
+
+        if i == "HyperDrive":
+            if wanted_state.get(i) > current_state.get(i):
+                for lvl in range(current_state.get(i) + 1, wanted_state.get(i) + 1):
+                    result.add("metal", math.floor(10000 * math.pow(2, lvl - 1)))
+                    result.add("crystal", math.floor(20000 * math.pow(2, lvl - 1)))
+                    result.add("deuter", math.floor(6000 * math.pow(2, lvl - 1)))
+
+        if i == "SpyTechnology":
+            if wanted_state.get(i) > current_state.get(i):
+                for lvl in range(current_state.get(i) + 1, wanted_state.get(i) + 1):
+                    result.add("metal", math.floor(200 * math.pow(2, lvl - 1)))
+                    result.add("crystal", math.floor(1000 * math.pow(2, lvl - 1)))
+                    result.add("deuter", math.floor(200 * math.pow(2, lvl - 1)))
+
+        if i == "ComputerTechnology":
+            if wanted_state.get(i) > current_state.get(i):
+                for lvl in range(current_state.get(i) + 1, wanted_state.get(i) + 1):
+                    result.add("crystal", math.floor(400 * math.pow(2, lvl - 1)))
+                    result.add("deuter", math.floor(600 * math.pow(2, lvl - 1)))
+
+        if i == "Astrophysics":
+            if wanted_state.get(i) > current_state.get(i):
+                for lvl in range(current_state.get(i) + 1, wanted_state.get(i) + 1):
+                    result.add("metal", 100 * math.floor(40 * math.pow(1.75, lvl - 1)))
+                    result.add("crystal", 100 * math.floor(80 * math.pow(1.75, lvl - 1)))
+                    result.add("deuter", 100 * math.floor(40 * math.pow(1.75, lvl - 1)))
+
+        if i == "IntergalacticResearchNetwork":
+            if wanted_state.get(i) > current_state.get(i):
+                for lvl in range(current_state.get(i) + 1, wanted_state.get(i) + 1):
+                    result.add("metal", math.floor(240000 * math.pow(2, lvl - 1)))
+                    result.add("crystal", math.floor(400000 * math.pow(2, lvl - 1)))
+                    result.add("deuter", math.floor(160000 * math.pow(2, lvl - 1)))
+
+        if i == "GravitonDevelopment":
+            if wanted_state.get(i) > current_state.get(i):
+                result.add("energy", 300000 * math.pow(3, wanted_state.get(i) - 1))
+
+        if i == "BattleTechnology":
+            if wanted_state.get(i) > current_state.get(i):
+                for lvl in range(current_state.get(i) + 1, wanted_state.get(i) + 1):
+                    result.add("metal", math.floor(800 * math.pow(2, lvl - 1)))
+                    result.add("crystal", math.floor(200 * math.pow(2, lvl - 1)))
+
+        if i == "ShieldingTechnology":
+            if wanted_state.get(i) > current_state.get(i):
+                for lvl in range(current_state.get(i) + 1, wanted_state.get(i) + 1):
+                    result.add("metal", math.floor(200 * math.pow(2, lvl - 1)))
+                    result.add("crystal", math.floor(600 * math.pow(2, lvl - 1)))
+
+        if i == "Armor":
+            if wanted_state.get(i) > current_state.get(i):
+                for lvl in range(current_state.get(i) + 1, wanted_state.get(i) + 1):
+                    result.add("metal", math.floor(1000 * math.pow(2, lvl - 1)))
+
+        # Ships
+
+        if i == "LightFighter":
+            if wanted_state.get(i) > current_state.get(i):
+                result.add("metal", 3000 * (wanted_state.get(i) - current_state.get(i)))
+                result.add("crystal", 1000 * (wanted_state.get(i) - current_state.get(i)))
+
+        if i == "HeavyFigher":
+            if wanted_state.get(i) > current_state.get(i):
+                result.add("metal", 6000 * (wanted_state.get(i) - current_state.get(i)))
+                result.add("crystal", 4000 * (wanted_state.get(i) - current_state.get(i)))
+
+        if i == "Cruiser":
+            if wanted_state.get(i) > current_state.get(i):
+                result.add("metal", 20000 * (wanted_state.get(i) - current_state.get(i)))
+                result.add("crystal", 7000 * (wanted_state.get(i) - current_state.get(i)))
+                result.add("deuter", 2000 * (wanted_state.get(i) - current_state.get(i)))
+
+        if i == "Battleship":
+            if wanted_state.get(i) > current_state.get(i):
+                result.add("metal", 45000 * (wanted_state.get(i) - current_state.get(i)))
+                result.add("crystal", 15000 * (wanted_state.get(i) - current_state.get(i)))
+
+        if i == "LightTransport":
+            if wanted_state.get(i) > current_state.get(i):
+                result.add("metal", 2000 * (wanted_state.get(i) - current_state.get(i)))
+                result.add("crystal", 2000 * (wanted_state.get(i) - current_state.get(i)))
+
+        if i == "HeavyTransport":
+            if wanted_state.get(i) > current_state.get(i):
+                result.add("metal", 6000 * (wanted_state.get(i) - current_state.get(i)))
+                result.add("crystal", 6000 * (wanted_state.get(i) - current_state.get(i)))
+
+        if i == "ColonizationShip":
+            if wanted_state.get(i) > current_state.get(i):
+                result.add("metal", 10000 * (wanted_state.get(i) - current_state.get(i)))
+                result.add("crystal", 20000 * (wanted_state.get(i) - current_state.get(i)))
+                result.add("deuter", 10000 * (wanted_state.get(i) - current_state.get(i)))
+
+        if i == "Dreadnought":
+            if wanted_state.get(i) > current_state.get(i):
+                result.add("metal", 30000 * (wanted_state.get(i) - current_state.get(i)))
+                result.add("crystal", 40000 * (wanted_state.get(i) - current_state.get(i)))
+                result.add("deuter", 15000 * (wanted_state.get(i) - current_state.get(i)))
+
+        if i == "Bomber":
+            if wanted_state.get(i) > current_state.get(i):
+                result.add("metal", 50000 * (wanted_state.get(i) - current_state.get(i)))
+                result.add("crystal", 25000 * (wanted_state.get(i) - current_state.get(i)))
+                result.add("deuter", 15000 * (wanted_state.get(i) - current_state.get(i)))
+
+        if i == "Destroyer":
+            if wanted_state.get(i) > current_state.get(i):
+                result.add("metal", 60000 * (wanted_state.get(i) - current_state.get(i)))
+                result.add("crystal", 50000 * (wanted_state.get(i) - current_state.get(i)))
+                result.add("deuter", 15000 * (wanted_state.get(i) - current_state.get(i)))
+
+        if i == "DeathStar":
+            if wanted_state.get(i) > current_state.get(i):
+                result.add("metal", 5000000 * (wanted_state.get(i) - current_state.get(i)))
+                result.add("crystal", 4000000 * (wanted_state.get(i) - current_state.get(i)))
+                result.add("deuter", 1000000 * (wanted_state.get(i) - current_state.get(i)))
+
+        if i == "Recycler":
+            if wanted_state.get(i) > current_state.get(i):
+                result.add("metal", 10000 * (wanted_state.get(i) - current_state.get(i)))
+                result.add("crystal", 6000 * (wanted_state.get(i) - current_state.get(i)))
+                result.add("deuter", 2000 * (wanted_state.get(i) - current_state.get(i)))
+
+        if i == "SpyProbe":
+            if wanted_state.get(i) > current_state.get(i):
+                result.add("crystal", 1000 * (wanted_state.get(i) - current_state.get(i)))
+
+        if i == "SolarSatellite":
+            if wanted_state.get(i) > current_state.get(i):
+                result.add("crystal", 2000 * (wanted_state.get(i) - current_state.get(i)))
+                result.add("deuter", 500 * (wanted_state.get(i) - current_state.get(i)))
+
+        # Defenses
+
+        if i == "RocketLauncher":
+            if wanted_state.get(i) > current_state.get(i):
+                result.add("metal", 2000 * (wanted_state.get(i) - current_state.get(i)))
+
+        if i == "LightLaserCannon":
+            if wanted_state.get(i) > current_state.get(i):
+                result.add("metal", 1500 * (wanted_state.get(i) - current_state.get(i)))
+                result.add("crystal", 500 * (wanted_state.get(i) - current_state.get(i)))
+
+        if i == "HeavyLaserCannon":
+            if wanted_state.get(i) > current_state.get(i):
+                result.add("metal", 6000 * (wanted_state.get(i) - current_state.get(i)))
+                result.add("crystal", 2000 * (wanted_state.get(i) - current_state.get(i)))
+
+        if i == "GaussCannon":
+            if wanted_state.get(i) > current_state.get(i):
+                result.add("metal", 20000 * (wanted_state.get(i) - current_state.get(i)))
+                result.add("crystal", 15000 * (wanted_state.get(i) - current_state.get(i)))
+                result.add("deuter", 2000 * (wanted_state.get(i) - current_state.get(i)))
+
+        if i == "IonCannon":
+            if wanted_state.get(i) > current_state.get(i):
+                result.add("metal", 2000 * (wanted_state.get(i) - current_state.get(i)))
+                result.add("crystal", 6000 * (wanted_state.get(i) - current_state.get(i)))
+
+        if i == "PlasmaLauncher":
+            if wanted_state.get(i) > current_state.get(i):
+                result.add("metal", 50000 * (wanted_state.get(i) - current_state.get(i)))
+                result.add("crystal", 50000 * (wanted_state.get(i) - current_state.get(i)))
+                result.add("deuter", 30000 * (wanted_state.get(i) - current_state.get(i)))
+
+        if i == "SmallPlanetaryShield":
+            if wanted_state.get(i) == 1 and current_state.get(i) == 0:
+                result.add("metal", 10000 * (wanted_state.get(i) - current_state.get(i)))
+                result.add("crystal", 10000 * (wanted_state.get(i) - current_state.get(i)))
+
+        if i == "LargePlanetaryShield":
+            if wanted_state.get(i) == 1 and current_state.get(i) == 0:
+                result.add("metal", 50000 * (wanted_state.get(i) - current_state.get(i)))
+                result.add("crystal", 50000 * (wanted_state.get(i) - current_state.get(i)))
+
+        if i == "AntiMissile":
+            if wanted_state.get(i) > current_state.get(i):
+                result.add("metal", 8000 * (wanted_state.get(i) - current_state.get(i)))
+                result.add("deuter", 2000 * (wanted_state.get(i) - current_state.get(i)))
+
+        if i == "InterplanetaryMissile":
+            if wanted_state.get(i) > current_state.get(i):
+                result.add("metal", 12500 * (wanted_state.get(i) - current_state.get(i)))
+                result.add("crystal", 2500 * (wanted_state.get(i) - current_state.get(i)))
+                result.add("deuter", 10000 * (wanted_state.get(i) - current_state.get(i)))
 
     return result
 
