@@ -19,6 +19,10 @@ class OgameBot:
                  'SpyTechnology':'106','ComputerTechnology':'108','Astrophysics':'124','IntergalacticResearchNetwork':'123',
                  'GravitonDevelopment':'199','BattleTechnology':'109','ShieldingTechnology':'110','Armor':'111'}
 
+        self._fleet = {'LightFigher': '204', 'HeavyFigher': '205', 'Cruiser': '206', 'Battleship': '207', 'LightTransport': '202',
+                       'HeavyTransport': '203', 'ColonizationShip': '208', 'Dreadnought': '215', 'Bomber': '211', 'Destroyer': '213',
+                       'DeathStar': '214', 'Recycler': '209', 'SpySatellite': '210', 'SolarSatellite': '212'}
+
 
         self.current_scope = ""
 
@@ -58,23 +62,37 @@ class OgameBot:
             btnToClick = self.browser.find_element(By.XPATH, selection)
             btnToClick.click()
             WebDriverWait(self.browser, 10).until(
-                EC.presence_of_all_elements_located((By.XPATH, "//*[@id='content']/div[2]/a/span")))
+                EC.presence_of_all_elements_located((By.XPATH, "//*[@id='content']/div[2]/a")))
             level = int(re.search(r'\d+',self.browser.find_element_by_xpath("//*[@id='content']/span").text).group())
             self.mainPlanetState.set(building, level)
 
 
     def getInfoTechnology(self):
         self.setScope('research')
-        for research in self._research:
 
+        for research in self._research:
             selection = "//a[@ref='" + self._research[research] + "']"
             btnToClick = self.browser.find_element(By.XPATH, selection)
             btnToClick.click()
             WebDriverWait(self.browser, 10).until(
-                 EC.presence_of_all_elements_located((By.XPATH, "//*[@id='content']/div[2]/a")))
+                 EC.presence_of_all_elements_located((By.XPATH, "//*[@id='content']/div[2]/a/span")))
 
             level = int(re.search(r'\d+', self.browser.find_element_by_xpath("//*[@id='content']/span").text).group())
             self.mainPlanetState.set(research, level)
+
+    def getInfoFleetSize(self):
+        self.setScope('shipyard')
+
+        for ship in self._fleet:
+            selection = "//a[@ref='" + self._fleet[ship] + "']"
+            btnToClick = self.browser.find_element(By.XPATH, selection)
+            btnToClick.click()
+            WebDriverWait(self.browser, 10).until(
+                EC.presence_of_all_elements_located((By.ID, "number")))
+
+            number = int(re.search(r'\d+', self.browser.find_element_by_xpath("//*[@id='content']/span").text).group())
+            self.mainPlanetState.set(ship, number)
+
 
     def getInfoSizeOfPlanet(self):
         self.setScope('overview')

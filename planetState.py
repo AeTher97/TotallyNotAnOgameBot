@@ -45,7 +45,22 @@ class PlanetState:
         "GravitonDevelopment",
         "BattleTechnology",
         "ShieldingTechnology",
-        "Armor"
+        "Armor",
+
+        'LightFigher',
+        'HeavyFigher',
+        'Cruiser',
+        'Battleship',
+        'LightTransport',
+        'HeavyTransport',
+        'ColonizationShip',
+        'Dreadnought',
+        'Bomber',
+        'Destroyer',
+        'DeathStar',
+        'Recycler',
+        'SpySatellite',
+        'SolarSatellite'
         ]
 
         for i in self._attributes:
