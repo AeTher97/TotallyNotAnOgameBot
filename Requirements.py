@@ -393,6 +393,87 @@ def getRequirementsTech(planet_state):
                 result.set_min("Shipyard", 1)
                 result.set_min("RobotFactory", 2)
 
+        # Defenses
+
+        if i == "RocketLauncher":
+            if planet_state.get(i) > 0:
+                result.set_min("Shipyard", 1)
+                result.set_min("RobotFactory", 2)
+
+        if i == "LightLaserCannon":
+            if planet_state.get(i) > 0:
+                result.set_min("Shipyard", 2)
+                result.set_min("RobotFactory", 2)
+                result.set_min("EnergyTechnology", 2)
+                result.set_min("LaserTechnology", 3)
+                result.set_min("Laboratory", 1)
+
+        if i == "HeavyLaserCannon":
+            if planet_state.get(i) > 0:
+                result.set_min("Shipyard", 4)
+                result.set_min("RobotFactory", 2)
+                result.set_min("EnergyTechnology", 3)
+                result.set_min("LaserTechnology", 6)
+                result.set_min("Laboratory", 1)
+
+        if i == "GaussCannon":
+            if planet_state.get(i) > 0:
+                result.set_min("Shipyard", 6)
+                result.set_min("RobotFactory", 2)
+                result.set_min("EnergyTechnology", 6)
+                result.set_min("BattleTechnology", 4)
+                result.set_min("ShieldingTechnology", 1)
+                result.set_min("Laboratory", 6)
+
+        if i == "IonCannon":
+            if planet_state.get(i) > 0:
+                result.set_min("Shipyard", 4)
+                result.set_min("RobotFactory", 2)
+                result.set_min("IonTechnology", 6)
+                result.set_min("Laboratory", 4)
+                result.set_min("EnergyTechnology", 4)
+                result.set_min("LaserTechnology", 5)
+
+        if i == "PlasmaLauncher":
+            if planet_state.get(i) > 0:
+                result.set_min("Shipyard", 8)
+                result.set_min("RobotFactory", 2)
+                result.set_min("PlasmaTechnology", 6)
+                result.set_min("Laboratory", 4)
+                result.set_min("EnergyTechnology", 8)
+                result.set_min("LaserTechnology", 10)
+                result.set_min("IonTechnology", 5)
+
+        if i == "SmallPlanetaryShield":
+            if planet_state.get(i) > 0:
+                result.set_min("Shipyard", 1)
+                result.set_min("RobotFactory", 2)
+                result.set_min("ShieldingTechnology", 2)
+                result.set_min("Laboratory", 6)
+                result.set_min("EnergyTechnology", 3)
+
+        if i == "LargePlanetaryShield":
+            if planet_state.get(i) > 0:
+                result.set_min("Shipyard", 6)
+                result.set_min("RobotFactory", 2)
+                result.set_min("ShieldingTechnology", 6)
+                result.set_min("Laboratory", 6)
+                result.set_min("EnergyTechnology", 3)
+
+        if i == "AntiMissile":
+            if planet_state.get(i) > 0:
+                result.set_min("RocketSilo", 2)
+                result.set_min("Shipyard", 1)
+                result.set_min("RobotFactory", 2)
+
+        if i == "InterplanetaryMissile":
+            if planet_state.get(i) > 0:
+                result.set_min("RocketSilo", 4)
+                result.set_min("Shipyard", 1)
+                result.set_min("RobotFactory", 2)
+                result.set_min("ImpulseDrive", 1)
+                result.set_min("Laboratory", 2)
+                result.set_min("EnergyTechnology", 1)
 
     return result
 
