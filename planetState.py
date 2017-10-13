@@ -19,7 +19,6 @@ class PlanetState:
         "DeuterExtractor",
         "SolarPowerPlant",
         "FusionPowerPlant",
-        "SolarSatellite",
         "MetalStorage",
         "CrystalStorage",
         "DeuterStorage",
