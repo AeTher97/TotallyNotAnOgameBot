@@ -70,7 +70,7 @@ class OgameBot:
                          'InterplanetaryMissile': '503'}
 
         self.current_scope = ""
-
+        self.browser = None
         self.mainPlanetState = PlanetState()
         self.planetNumber = 0
 
@@ -259,7 +259,7 @@ class OgameBot:
                 btnToClick = self.browser.find_element(By.XPATH, selection)
                 btnToClick.click()
                 WebDriverWait(self.browser, 10).until(
-                    EC.presence_of_all_elements_located((By.XPATH, "//*[@id='content'']/div[2]/a")))
+                    EC.presence_of_all_elements_located((By.XPATH, "//*[@id='content'']/span")))
                 build = self.browser.find_element(By.XPATH, "//*[@id='content']/div[2]/a")
                 build.click()
             if thing in self._research:
@@ -348,7 +348,7 @@ class OgameBot:
             cancel = self.browser.find_element_by_class_name("tooltip abort_link js_hideTipOnMobile")
             cancel.click()
 
-    def setSpySatelliteCount(self, number):
+    def setSpyProbeCount(self, number):
         self.setScope('preferences')
         overall = self.browser.find_element(By.XPATH, '//*[@id="tabs-pref"]/li[2]')
         overall.click()
