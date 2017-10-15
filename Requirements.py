@@ -265,7 +265,7 @@ def getRequirementsTech(planet_state):
                 result.set_min("Laboratory", 1)
                 result.set_min("EnergyTechnology", 1)
 
-        if i == "HeavyFigher":
+        if i == "HeavyFighter":
             if planet_state.get(i) > 0:
                 result.set_min("Shipyard", 3)
                 result.set_min("RobotFactory", 2)

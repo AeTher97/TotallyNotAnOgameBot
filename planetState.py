@@ -49,8 +49,8 @@ class PlanetState:
         "ShieldingTechnology",
         "Armor",
 
-        'LightFigher',
-        'HeavyFigher',
+        'LightFighter',
+        'HeavyFighter',
         'Cruiser',
         'Battleship',
         'LightTransport',
@@ -62,7 +62,7 @@ class PlanetState:
         'DeathStar',
         'Recycler',
         'SpyProbe',
-        'SolarSatellite'
+        'SolarSatellite',
 
         'RocketLauncher',
         'LightLaserCannon',
@@ -133,6 +133,14 @@ class PlanetState:
                 return True
         raise ValueError("There is no attribute named: " + str(attr_name))
 
+    def copy(self):
+
+        copy_state = PlanetState()
+        for i in self._attributes:
+            copy_state.set(i, getattr(self, i))
+
+        return copy_state
+
     def __str__(self):
         result = str()
         for i in self._attributes:
@@ -150,5 +158,14 @@ class PlanetState:
             if i != "time":
                 if getattr(self, i) < getattr(other, i):
                     return False
+        return True
+
+    def __eq__(self, other):
+        for i in self._attributes:
+            try:
+                if getattr(self, i) != getattr(other, i):
+                    return False
+            except AttributeError:
+                return False
         return True
 
