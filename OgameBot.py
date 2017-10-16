@@ -73,6 +73,7 @@ class OgameBot:
         self.browser = None
         self.mainPlanetState = PlanetState()
         self.planetNumber = 0
+        self.airborneFleets = 0
 
     def getInfoResources(self):
         self.setScope('overview')
@@ -234,7 +235,7 @@ class OgameBot:
         if self.current_scope == page:
             return
         if page == 'fleet':
-            self.browser.get("https://s"+uninumber+"-pl.ogame.gameforge.com/game/index.php?page=fleet1")
+            self.browser.get("https://s"+uninumber+"-pl.ogame.gameforge.com/game/index.php?page=fleet"+self.airborneFleets+1)
         else:
             self.browser.get("https://s"+uninumber+"-pl.ogame.gameforge.com/game/index.php?page=" + page)
         self.current_scope = page
@@ -358,5 +359,8 @@ class OgameBot:
         numberField.send_keys(number)
         accept = self.browser.find_element_by_xpath("//*[@id='prefs']/div[1]/div[5]/input")
         accept.click()
+
+    def sendFleet(self,fleet,target,mission,speed):
+        self.setScope('fleet')
 
         # TODO
