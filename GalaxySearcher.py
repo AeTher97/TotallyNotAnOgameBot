@@ -38,9 +38,11 @@ class GalaxySearcher():
 
                             print(name)
                             print(status)
-                            if sendProbes:
+                            self.bot.GetInfoGoingFleets()
+                            if sendProbes and startingPlanet.get('ComputerTechnology')+1<self.bot.airborneFleets:
                                 print('sending a spy')
                                 send = self.browser.get_element(By.XPATH,'//*[@id="galaxytable"]/tbody/tr['+str(i)+']/td[8]/span/a[1]/span')
+                                self.bot.airborneFleets = self.bot.airborneFleets + 1
                             send.click()
                             planet.set('Galaxy',startingPlanet.get('Galaxy'))
                             planet.set('Star',startingPlanet.get('Star')+j)

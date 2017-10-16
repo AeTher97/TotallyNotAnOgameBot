@@ -187,6 +187,18 @@ class OgameBot:
         self.mainPlanetState.set('Star', numbers[1])
         self.mainPlanetState.set('Planet', numbers[2])
 
+    def getInfoFleets(self):
+        self.setScope('overview')
+        try:
+            WebDriverWait(self.browser, 10).until(
+                EC.presence_of_all_elements_located((By.XPATH, "//*[@id='eventboxFilled']/p/span")))
+            string = self.browser.get_element_by_xpath(By.XPATH, '//*[@id="eventboxFilled"]/p').text
+            number = re.findall(r'\d+', string)
+            self.airborneFleets = string
+        except:
+            print('no fleets airborne')
+            self.airborneFleets = 0
+
     def logout(self):
         self.setScope('logout')
 
@@ -422,4 +434,5 @@ class OgameBot:
         next.click()
         self.airborneFleets = self.airborneFleets+1
 
-        # TODO
+
+    # TODO
