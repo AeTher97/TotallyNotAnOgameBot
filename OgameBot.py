@@ -375,11 +375,11 @@ class OgameBot:
         WebDriverWait(self.browser, 10).until(
             EC.presence_of_all_elements_located((By.XPATH, '//*[@id="speedLinks"]/a[1]')))
 
-        galaxyField = self.browser.find_element_by_xpath('//*[@id="galaxy"]')
         starField = self.browser.find_element_by_xpath('//*[@id="system"]')
         planetField = self.browser.find_element_by_xpath('//*[@id="position"]')
 
-
+        self.browser.execute_script(
+            "document.getElementById('galaxy').value = '"+str(target.get('Galaxy'))+"';")
         starField.send_keys(str(target.get('Star')))
         planetField.send_keys(str(target.get('Planet')))
 
@@ -405,5 +405,6 @@ class OgameBot:
 
         next = self.browser.find_element_by_xpath('//*[@id="start"]')
         next.click()
+        self.airborneFleets = self.airborneFleets+1
 
         # TODO
