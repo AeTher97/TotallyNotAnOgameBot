@@ -147,7 +147,7 @@ class OgameBot:
         self.setScope('defense')
 
         for defense in self._defense:
-            if defense != 'SmallPlanetaryShield' and defense != 'SmallPlanetaryShield':
+            if defense != 'SmallPlanetaryShield' and defense != 'LargePlanetaryShield':
                 selection = "//a[@ref='" + self._defense[defense] + "']"
                 btnToClick = self.browser.find_element(By.XPATH, selection)
                 btnToClick.click()

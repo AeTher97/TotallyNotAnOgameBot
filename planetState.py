@@ -76,11 +76,46 @@ class PlanetState:
         'InterplanetaryMissile'
         ]
 
+        self._attributes_to_compare = [
+                            "MetalMine",
+                            "CrystalMine",
+                            "DeuterExtractor",
+                            "SolarPowerPlant",
+                            "FusionPowerPlant",
+                            "MetalStorage",
+                            "CrystalStorage",
+                            "DeuterStorage",
+
+                            "RobotFactory",
+                            "Shipyard",
+                            "Laboratory",
+                            "AllayDepot",
+                            "RocketSilo",
+                            "NaniteFactory",
+                            "Terraformer",
+                            "SpaceDock",
+
+                            "EnergyTechnology",
+                            "LaserTechnology",
+                            "IonTechnology",
+                            "HyperspaceTechnology",
+                            "PlasmaTechnology",
+                            "CombustionDrive",
+                            "ImpulseDrive",
+                            "HyperDrive",
+                            "SpyTechnology",
+                            "ComputerTechnology",
+                            "Astrophysics",
+                            "IntergalacticResearchNetwork",
+                            "GravitonDevelopment",
+                            "BattleTechnology",
+                            "ShieldingTechnology",
+                            "Armor",
+                            ]
+
         for i in self._attributes:
             setattr(self, i, 0)
 
-        # defenses
-        # ships
 
     def set(self, attr_name, value):
         """
@@ -154,14 +189,13 @@ class PlanetState:
         :param other: PlanetState object
         :return: if every attribute is greater or equal return True, otherwise return False
         """
-        for i in self._attributes:
-            if i != "time":
+        for i in self._attributes_to_compare:
                 if getattr(self, i) < getattr(other, i):
                     return False
         return True
 
     def __eq__(self, other):
-        for i in self._attributes:
+        for i in self._attributes_to_compare:
             try:
                 if getattr(self, i) != getattr(other, i):
                     return False
