@@ -14,12 +14,18 @@ class GalaxySearcher():
         self.bot = OgameBot
         self.targetList = []
 
-    def scanGalaxy(self,radius,startingPlanet):
+    def scanGalaxy(self, radius, startingPlanet):
+        """
+
+        :param radius: Int
+        :param startingPlanet: object PlanetState with coords
+        :return: Nothing
+        """
         self.bot.setScope('galaxy')
         WebDriverWait(self.browser,10).until(
             EC.presence_of_all_elements_located((By.XPATH, "//*[@id='colonized']")))
         times = 0
-        while times <radius:
+        while times < radius:
             self.GoBack()
             times = times+1
 
