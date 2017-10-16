@@ -43,8 +43,8 @@ class OgameBot:
                           'ShieldingTechnology': '110',
                           'Armor': '111'}
 
-        self._fleet = {'LightFigher': '204',
-                       'HeavyFigher': '205',
+        self._fleet = {'LightFighter': '204',
+                       'HeavyFighter': '205',
                        'Cruiser': '206',
                        'Battleship': '207',
                        'LightTransport': '202',
@@ -85,18 +85,30 @@ class OgameBot:
         deuter = self.browser.find_element_by_id('resources_deuterium').text
         energy = self.browser.find_element_by_id('resources_energy').text
 
-        self.mainPlanetState.set("metal", metal)
-        self.mainPlanetState.set("crystal", crystal)
-        self.mainPlanetState.set("deuter", deuter)
-        self.mainPlanetState.set("energy", energy)
+        self.mainPlanetState.set("metal", int(metal.replace('.', '')))
+        self.mainPlanetState.set("crystal", int(crystal.replace('.', '')))
+        self.mainPlanetState.set("deuter", int(deuter.replace('.', '')))
+        self.mainPlanetState.set("energy", int(energy.replace('.', '')))
 
     def getInfoBuildings(self):
         self.setScope('resources')
+
         for building in self._resources:
-            if building != 'SolarSatellite':
-                selection = "//a[@ref='" + self._resources[building] + "']"
-                btnToClick = self.browser.find_element(By.XPATH, selection)
-                btnToClick.click()
+            try:
+                if building != 'SolarSatellite':
+                    selection = "//a[@ref='" + self._resources[building] + "']"
+                    btnToClick = self.browser.find_element(By.XPATH, selection)
+                    btnToClick.click()
+                    WebDriverWait(self.browser, 10).until(
+                        EC.presence_of_all_elements_located((By.XPATH, "//*[@id='content']/div[2]/a")))
+
+                    level = int(re.search(r'\d+', self.browser.find_element_by_xpath(
+                        "//*[@id='content']/span").text).group())
+                    self.mainPlanetState.set(building, level)
+            except Exception as e:
+                print(e)
+                overlay = self.browser.find_element(By.XPATH,'//*[@id="details'+str(self._resources[building])+'"]')
+                overlay.click()
                 WebDriverWait(self.browser, 10).until(
                     EC.presence_of_all_elements_located((By.XPATH, "//*[@id='content']/div[2]/a")))
 
@@ -106,14 +118,23 @@ class OgameBot:
 
         self.setScope('station')
         for building in self._station:
+            try:
+                selection = "//a[@ref='" + self._station[building] + "']"
+                btnToClick = self.browser.find_element(By.XPATH, selection)
+                btnToClick.click()
+                WebDriverWait(self.browser, 10).until(
+                    EC.presence_of_all_elements_located((By.XPATH, "//*[@id='content']/div[2]/a/span")))
+                level = int(re.search(r'\d+', self.browser.find_element_by_xpath("//*[@id='content']/span").text).group())
+                self.mainPlanetState.set(building, level)
+            except:
+                overlay = self.browser.find_element(By.XPATH,'//*[@id="details' + str(self._station[building]) + '"]')
+                overlay.click()
+                WebDriverWait(self.browser, 10).until(
+                    EC.presence_of_all_elements_located((By.XPATH, "//*[@id='content']/div[2]/a")))
 
-            selection = "//a[@ref='" + self._station[building] + "']"
-            btnToClick = self.browser.find_element(By.XPATH, selection)
-            btnToClick.click()
-            WebDriverWait(self.browser, 10).until(
-                EC.presence_of_all_elements_located((By.XPATH, "//*[@id='content']/div[2]/a/span")))
-            level = int(re.search(r'\d+', self.browser.find_element_by_xpath("//*[@id='content']/span").text).group())
-            self.mainPlanetState.set(building, level)
+                level = int(re.search(r'\d+', self.browser.find_element_by_xpath(
+                    "//*[@id='content']/span").text).group())
+                self.mainPlanetState.set(building, level)
 
 
     def getInfoTechnology(self):
@@ -173,7 +194,7 @@ class OgameBot:
         WebDriverWait(self.browser, 10).until(
             EC.presence_of_all_elements_located((By.XPATH, "//*[@id='diameterContentField']/span[2]")))
         planetSize = self.browser.find_element(By.XPATH, "//*[@id='diameterContentField']/span[2]").text
-        self.mainPlanetState.set('PlanetSize', planetSize)
+        self.mainPlanetState.set('PlanetSize', int(planetSize.replace('.', '')))
 
     def getInfoPlanetTemperature(self):
         self.setScope('overview')
@@ -195,21 +216,23 @@ class OgameBot:
         positionString = self.browser.find_element(By.XPATH, "//*[@id='positionContentField']/a").text
 
         numbers = re.findall(r'\d+', positionString)
-        self.mainPlanetState.set('Galaxy', numbers[0])
-        self.mainPlanetState.set('Star', numbers[1])
-        self.mainPlanetState.set('Planet', numbers[2])
+        self.mainPlanetState.set('Galaxy', int(numbers[0].replace('.', '')))
+        self.mainPlanetState.set('Star', int(numbers[1].replace('.', '')))
+        self.mainPlanetState.set('Planet', int(numbers[2].replace('.', '')))
 
     def getInfoFleets(self):
-        self.setScope('overview')
+
         try:
-            WebDriverWait(self.browser, 10).until(
-                EC.presence_of_all_elements_located((By.XPATH, "//*[@id='eventboxFilled']/p/span")))
-            string = self.browser.get_element_by_xpath(By.XPATH, '//*[@id="eventboxFilled"]/p').text
+            WebDriverWait(self.browser, 1).until(
+                 EC.presence_of_all_elements_located((By.XPATH, "//*[@id='eventboxFilled']/p/span")))
+            string = self.browser.find_element(By.XPATH, '//*[@id="eventboxFilled"]/p').text
+            print(string)
             number = re.findall(r'\d+', string)
-            self.airborneFleets = string
+            self.airborneFleets = number[2]
         except:
             print('no fleets airborne')
             self.airborneFleets = 0
+
 
     def logout(self):
         self.setScope('logout')
@@ -229,13 +252,17 @@ class OgameBot:
         :return: Nothing
         """
         self.getInfoPlanetNumber()
-        self.getInfoBuildings()
-        self.getInfoDefenses()
-        self.getInfoFleetSize()
-        self.getInfoPlanetPosition()
+        self.getInfoFleets()
         self.getInfoPlanetTemperature()
         self.getInfoResources()
         self.getInfoSizeOfPlanet()
+        self.getInfoBuildings()
+        self.getInfoDefenses()
+        self.getInfoFleetSize()
+        """
+        self.getInfoPlanetPosition()
+        """
+
         self.getInfoTechnology()
 
     def launchBrowser(self):
