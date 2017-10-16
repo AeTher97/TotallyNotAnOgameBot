@@ -14,15 +14,20 @@ mainPlanet.set('Galaxy',4)
 mainPlanet.set('Star',189)
 mainPlanet.set('Planet','12')
 fleet = Fleet()
-Fleet.set('LighFighter',1)
-cos = GalaxySearcher(testing)
-cos.scanGalaxy(5,mainPlanet)
-cos.printList()
+
+fleet.set('LightFigher',1)
+fleet.set('Speed',100)
+fleet.set('Mission','Attack')
+
+
 target= PlanetState()
 target.set('Galaxy',4)
 target.set('Star',193)
 target.set('Planet',4)
-OgameBot.sendFleet(Fleet,target,'Attack',100)
+print(target.get('Galaxy'))
+print(target.get('Star'))
+print(target.get('Planet'))
+testing.sendFleet(fleet,target)
 
 
 

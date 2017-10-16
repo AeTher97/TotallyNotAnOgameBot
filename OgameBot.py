@@ -69,6 +69,9 @@ class OgameBot:
                          'AntiMissile': '502',
                          'InterplanetaryMissile': '503'}
 
+        self._missions = {'Expedition':'15','Colonize':'7','Recycle':'8','Transport':'3','Station':'4',
+                          'Spy':'6','Stop':'5','Attack':'1','AllyAttack':'2','Destroy':'9'}
+
         self.current_scope = ""
         self.browser = None
         self.mainPlanetState = PlanetState()
@@ -235,7 +238,7 @@ class OgameBot:
         if self.current_scope == page:
             return
         if page == 'fleet':
-            self.browser.get("https://s"+uninumber+"-pl.ogame.gameforge.com/game/index.php?page=fleet"+self.airborneFleets+1)
+            self.browser.get("https://s"+uninumber+"-pl.ogame.gameforge.com/game/index.php?page=fleet"+str(self.airborneFleets+1))
         else:
             self.browser.get("https://s"+uninumber+"-pl.ogame.gameforge.com/game/index.php?page=" + page)
         self.current_scope = page
@@ -360,7 +363,47 @@ class OgameBot:
         accept = self.browser.find_element_by_xpath("//*[@id='prefs']/div[1]/div[5]/input")
         accept.click()
 
-    def sendFleet(self,fleet,target,mission,speed):
+    def sendFleet(self,fleet,target):
         self.setScope('fleet')
+        for attribute in fleet.attributes:
+            if fleet.get(attribute) != 0 and attribute!='Mission' and attribute!= 'Speed':
+                field = self.browser.find_element_by_id('ship_'+str(self._fleet[attribute]))
+                field.send_keys(fleet.get(attribute))
+        next = self.browser.find_element_by_xpath('//*[@id="continue"]/span')
+        next.click()
+
+        WebDriverWait(self.browser, 10).until(
+            EC.presence_of_all_elements_located((By.XPATH, '//*[@id="speedLinks"]/a[1]')))
+
+        galaxyField = self.browser.find_element_by_xpath('//*[@id="galaxy"]')
+        starField = self.browser.find_element_by_xpath('//*[@id="system"]')
+        planetField = self.browser.find_element_by_xpath('//*[@id="position"]')
+
+
+        starField.send_keys(str(target.get('Star')))
+        planetField.send_keys(str(target.get('Planet')))
+
+        speed = self.browser.find_element_by_xpath('//*[@id="speedLinks"]/a['+str(fleet.get('Speed')/10)+']')
+        speed.click()
+
+        next = self.browser.find_element_by_xpath('//*[@id="continue"]')
+        next.click()
+
+        WebDriverWait(self.browser, 10).until(
+            EC.presence_of_all_elements_located((By.XPATH, '//*[@id="roundup"]/ul/li[2]/span')))
+
+        mission = self.browser.find_element_by_id('missionButton'+str(self._missions[fleet.get('Mission')]))
+        mission.click()
+
+        if fleet.get('Mission') == 'Transport':
+            MetalField = self.browser.find_element_by_xpath('//*[@id="metal"]')
+            CrystalField = self.browser.find_element_by_xpath('//*[@id="crystal"]')
+            DeuterField = self.browser.find_element_by_xpath('//*[@id="deuterium"]')
+            MetalField.send_keys(fleet.get('Metal'))
+            CrystalField.send_keys(fleet.get('Crystal'))
+            DeuterField.send_keys(fleet.get('Deuter'))
+
+        next = self.browser.find_element_by_xpath('//*[@id="start"]')
+        next.click()
 
         # TODO
