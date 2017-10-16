@@ -141,52 +141,83 @@ class OgameBot:
         self.setScope('research')
 
         for research in self._research:
+            try:
+                selection = "//a[@ref='" + self._research[research] + "']"
+                btnToClick = self.browser.find_element(By.XPATH, selection)
+                btnToClick.click()
+                WebDriverWait(self.browser, 10).until(
+                     EC.presence_of_all_elements_located((By.XPATH, "//*[@id='content']/div[2]/a")))
 
-            selection = "//a[@ref='" + self._research[research] + "']"
-            btnToClick = self.browser.find_element(By.XPATH, selection)
-            btnToClick.click()
-            WebDriverWait(self.browser, 10).until(
-                 EC.presence_of_all_elements_located((By.XPATH, "//*[@id='content']/div[2]/a")))
+                level = int(re.search(r'\d+', self.browser.find_element_by_xpath("//*[@id='content']/span").text).group())
+                self.mainPlanetState.set(research, level)
+            except:
+                overlay = self.browser.find_element(By.XPATH,'//*[@id="details' + str(self._research[research]) + '"]')
+                overlay.click()
+                WebDriverWait(self.browser, 10).until(
+                    EC.presence_of_all_elements_located((By.XPATH, "//*[@id='content']/div[2]/a")))
 
-            level = int(re.search(r'\d+', self.browser.find_element_by_xpath("//*[@id='content']/span").text).group())
-            self.mainPlanetState.set(research, level)
+                level = int(re.search(r'\d+', self.browser.find_element_by_xpath(
+                    "//*[@id='content']/span").text).group())
+                self.mainPlanetState.set(research, level)
 
     def getInfoFleetSize(self):
         self.setScope('shipyard')
 
+
         for ship in self._fleet:
-            selection = "//a[@ref='" + self._fleet[ship] + "']"
-            btnToClick = self.browser.find_element(By.XPATH, selection)
-            btnToClick.click()
-            WebDriverWait(self.browser, 10).until(
-                EC.presence_of_all_elements_located((By.ID, "number")))
-
-            number = int(re.search(r'\d+', self.browser.find_element_by_xpath("//*[@id='content']/span").text).group())
-            self.mainPlanetState.set(ship, number)
-
-    def getInfoDefenses(self):
-        self.setScope('defense')
-
-        for defense in self._defense:
-            if defense != 'SmallPlanetaryShield' and defense != 'LargePlanetaryShield':
-                selection = "//a[@ref='" + self._defense[defense] + "']"
+            try:
+                selection = "//a[@ref='" + self._fleet[ship] + "']"
                 btnToClick = self.browser.find_element(By.XPATH, selection)
                 btnToClick.click()
                 WebDriverWait(self.browser, 10).until(
                     EC.presence_of_all_elements_located((By.ID, "number")))
 
                 number = int(re.search(r'\d+', self.browser.find_element_by_xpath("//*[@id='content']/span").text).group())
-                self.mainPlanetState.set(defense, number)
-            else:
-                selection = "//a[@ref='" + self._defense[defense] + "']"
-                btnToClick = self.browser.find_element(By.XPATH, selection)
-                btnToClick.click()
+                self.mainPlanetState.set(ship, number)
+            except:
+                overlay = self.browser.find_element(By.XPATH, '//*[@id="details' + str(self._fleet[ship]) + '"]')
+                overlay.click()
+                WebDriverWait(self.browser, 10).until(
+                    EC.presence_of_all_elements_located((By.ID, "number")))
+
+                level = int(re.search(r'\d+', self.browser.find_element_by_xpath(
+                    "//*[@id='content']/span").text).group())
+                self.mainPlanetState.set(ship, level)
+
+
+    def getInfoDefenses(self):
+        self.setScope('defense')
+
+        for defense in self._defense:
+            try:
+                if defense != 'SmallPlanetaryShield' and defense != 'LargePlanetaryShield':
+                    selection = "//a[@ref='" + self._defense[defense] + "']"
+                    btnToClick = self.browser.find_element(By.XPATH, selection)
+                    btnToClick.click()
+                    WebDriverWait(self.browser, 10).until(
+                        EC.presence_of_all_elements_located((By.ID, "number")))
+
+                    number = int(re.search(r'\d+', self.browser.find_element_by_xpath("//*[@id='content']/span").text).group())
+                    self.mainPlanetState.set(defense, number)
+                else:
+                    selection = "//a[@ref='" + self._defense[defense] + "']"
+                    btnToClick = self.browser.find_element(By.XPATH, selection)
+                    btnToClick.click()
+                    WebDriverWait(self.browser, 10).until(
+                        EC.presence_of_all_elements_located((By.XPATH, "//*[@id='content']/span")))
+
+                    number = int(
+                        re.search(r'\d+', self.browser.find_element_by_xpath("//*[@id='content']/span").text).group())
+                    self.mainPlanetState.set(defense, number)
+            except:
+                overlay = self.browser.find_element(By.XPATH, '//*[@id="details' + str(self._defense[defense]) + '"]')
+                overlay.click()
                 WebDriverWait(self.browser, 10).until(
                     EC.presence_of_all_elements_located((By.XPATH, "//*[@id='content']/span")))
 
-                number = int(
-                    re.search(r'\d+', self.browser.find_element_by_xpath("//*[@id='content']/span").text).group())
-                self.mainPlanetState.set(defense, number)
+                level = int(re.search(r'\d+', self.browser.find_element_by_xpath(
+                    "//*[@id='content']/span").text).group())
+                self.mainPlanetState.set(defense, level)
 
 
     def getInfoSizeOfPlanet(self):
