@@ -199,6 +199,21 @@ class OgameBot:
         planetNumber = string[2]
         self.planetNumber = planetNumber
 
+    def getInfoAll(self):
+        """
+        call every getInfor function for main planet
+        :return: Nothing
+        """
+        self.getInfoPlanetNumber()
+        self.getInfoBuildings()
+        self.getInfoDefenses()
+        self.getInfoFleetSize()
+        self.getInfoPlanetPosition()
+        self.getInfoPlanetTemperature()
+        self.getInfoResources()
+        self.getInfoSizeOfPlanet()
+        self.getInfoTechnology()
+
     def launchBrowser(self):
         self.browser = webdriver.Chrome()
         self.browser.maximize_window()

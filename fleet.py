@@ -70,7 +70,6 @@ class Fleet:
                 return getattr(self, attr_name)
         raise ValueError("There is no attribute named: " + str(attr_name))
 
-
     def __str__(self):
         result = str()
         for i in self.attributes:
