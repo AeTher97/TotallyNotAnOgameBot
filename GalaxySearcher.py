@@ -13,8 +13,13 @@ class GalaxySearcher():
         self.browser = OgameBot.browser
         self.bot = OgameBot
 
-
     def scanGalaxy(self, radius, startingPlanet,sendProbes):
+        """
+
+        :param radius: Int
+        :param startingPlanet: object PlanetState with coords
+        :return: Nothing
+        """
         targetList = []
         self.bot.setScope('galaxy')
         WebDriverWait(self.browser,10).until(
