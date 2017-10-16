@@ -147,14 +147,26 @@ class OgameBot:
         self.setScope('defense')
 
         for defense in self._defense:
-            selection = "//a[@ref='" + self._defense[defense] + "']"
-            btnToClick = self.browser.find_element(By.XPATH, selection)
-            btnToClick.click()
-            WebDriverWait(self.browser, 10).until(
-                EC.presence_of_all_elements_located((By.ID, "number")))
+            if defense != 'SmallPlanetaryShield' and defense != 'SmallPlanetaryShield':
+                selection = "//a[@ref='" + self._defense[defense] + "']"
+                btnToClick = self.browser.find_element(By.XPATH, selection)
+                btnToClick.click()
+                WebDriverWait(self.browser, 10).until(
+                    EC.presence_of_all_elements_located((By.ID, "number")))
 
-            number = int(re.search(r'\d+', self.browser.find_element_by_xpath("//*[@id='content']/span").text).group())
-            self.mainPlanetState.set(defense, number)
+                number = int(re.search(r'\d+', self.browser.find_element_by_xpath("//*[@id='content']/span").text).group())
+                self.mainPlanetState.set(defense, number)
+            else:
+                selection = "//a[@ref='" + self._defense[defense] + "']"
+                btnToClick = self.browser.find_element(By.XPATH, selection)
+                btnToClick.click()
+                WebDriverWait(self.browser, 10).until(
+                    EC.presence_of_all_elements_located((By.XPATH, "//*[@id='content']/span")))
+
+                number = int(
+                    re.search(r'\d+', self.browser.find_element_by_xpath("//*[@id='content']/span").text).group())
+                self.mainPlanetState.set(defense, number)
+
 
     def getInfoSizeOfPlanet(self):
         self.setScope('overview')
