@@ -12,16 +12,14 @@ class GalaxySearcher():
     def __init__(self, OgameBot):
         self.browser = OgameBot.browser
         self.bot = OgameBot
-        self.targetList = []
 
-    def scanGalaxy(self,radius,startingPlanet):
+
+    def scanGalaxy(self, radius, startingPlanet,sendProbes):
+        targetList = []
         self.bot.setScope('galaxy')
         WebDriverWait(self.browser,10).until(
             EC.presence_of_all_elements_located((By.XPATH, "//*[@id='colonized']")))
-        times = 0
-        while times <radius:
-            self.GoBack()
-            times = times+1
+        self.GoToSystem(startingPlanet.get('Galaxy'), startingPlanet.get('Star')-radius)
 
         for j in range (-radius,radius):
             for i in range (1,15):
@@ -35,20 +33,20 @@ class GalaxySearcher():
 
                             print(name)
                             print(status)
-                            print('zapisuje')
+                            if sendProbes:
+                                print('sending a spy')
+                                send = self.browser.get_element(By.XPATH,'//*[@id="galaxytable"]/tbody/tr['+str(i)+']/td[8]/span/a[1]/span')
+                            send.click()
                             planet.set('Galaxy',startingPlanet.get('Galaxy'))
                             planet.set('Star',startingPlanet.get('Star')+j)
                             planet.set('Planet', i)
-                            self.targetList.append(planet)
+                            targetList.append(planet)
                 except:
                     print('failed to find a planet')
                     i = i+1
 
             self.GoForth()
-
-    def printList(self):
-        for element in self.targetList:
-            print(element)
+        return targetList
 
     def GoBack(self):
         self.bot.setScope('galaxy')
