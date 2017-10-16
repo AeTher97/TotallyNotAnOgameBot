@@ -468,6 +468,7 @@ def getRequirementsTech(planet_state):
 
     return result
 
+
 def getRequirementsRes(current_state, wanted_state):
     """
     Returns how much resources you need to go from current state to wanted state.
@@ -478,15 +479,6 @@ def getRequirementsRes(current_state, wanted_state):
     """
     result = Requirements()
     for i in result._attributes:
-        if i == "metal":
-            result.set(i, wanted_state.get(i))
-        if i == "crystal":
-            result.set(i, wanted_state.get(i))
-        if i == "deuter":
-            result.set(i, wanted_state.get(i))
-        if i == "energy":
-            result.set(i, wanted_state.get(i))
-
         if i == "MetalMine":
             if wanted_state.get(i) > current_state.get(i):
                 for lvl in range(current_state.get(i) + 1, wanted_state.get(i) + 1):

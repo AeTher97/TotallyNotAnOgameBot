@@ -120,7 +120,7 @@ class PlanetState:
     def set(self, attr_name, value):
         """
         :param attr_name: string
-        :param value: integer
+        :param value: integer or float
         :raises: ValueError if couldn't find attribute of given name
         :return: True if everything went well
         """
@@ -134,7 +134,7 @@ class PlanetState:
         """
         sets attribute to value if given value is greater than current one
         :param attr_name: string
-        :param value: integer
+        :param value: integer or float
         :raises: ValueError if couldn't find attribute of given name
         :return: True if everything went well
         """
