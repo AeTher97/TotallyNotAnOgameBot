@@ -1,4 +1,5 @@
 from planetState import PlanetState
+from fleet import Fleet
 from Requirements import getRequirementsTech
 from Requirements import getRequirementsRes
 
@@ -130,6 +131,69 @@ def convert_steps_to_orders(prev_state, list_of_steps):
                     list_of_orders.append(Order("build", j, list_of_steps[i].get(j)))
     return list_of_orders
 
+def spy_raports_to_attack(spy_reports, max_attacks, useHeavyTransporters=False):
+    threats = ['LightFighter',
+    'HeavyFighter',
+    'Cruiser',
+    'Battleship',
+    'LightTransport',
+    'HeavyTransport',
+    'ColonizationShip',
+    'Dreadnought',
+    'Bomber',
+    'Destroyer',
+    'DeathStar',
+    'Recycler',
+    'SpyProbe',
+
+    'RocketLauncher',
+    'LightLaserCannon',
+    'HeavyLaserCannon',
+    'GaussCannon',
+    'IonCannon',
+    'PlasmaLauncher',
+    'SmallPlanetaryShield',
+    'LargePlanetaryShield',
+    'AntiMissile',
+    'InterplanetaryMissile']
+
+    number_of_reports = len(spy_reports)
+    potential_targets = list()
+
+    # search for defensless targets
+    for i in range(0, len(spy_reports)):
+        defensless = True
+        for j in threats:
+            if spy_reports[i].get(j) > 0:
+                defensless = False
+                break
+        if defensless:
+            potential_targets.append(spy_reports[i])
+
+    # search for best profit targets
+    profit_list = list()
+    for i in range(0, len(potential_targets)):
+        profit = potential_targets[i].get("metal")
+        profit += potential_targets[i].get("crystal")
+        profit += potential_targets[i].get("deuter")
+        profit_list.append((profit, i))
+
+    profit_list.sort(key=lambda profit: profit[0], reverse=True)
+
+    result = list()
+
+    for i in range(0, len(profit_list)):
+        if i + 1 > max_attacks:
+            break
+        attack_fleet = Fleet()
+        if useHeavyTransporters:
+            attack_fleet.set("HeavyTransport", int(profit_list[i][0]/50000))
+        else:
+            attack_fleet.set("LightTransport", int(profit_list[i][0]/10000))
+        target_planet = potential_targets[profit_list[i][1]]
+        result.append(Order("attack", attack_fleet, target_planet))
+
+    return result
 
 class Order:
     def __init__(self, _action, *args):
@@ -143,6 +207,11 @@ class Order:
                 self.metal = args[0]
                 self.crystal = args[1]
                 self.deuter = args[2]
+            elif self.action == "attack":
+                self.fleet = args[0]
+                self.target = args[1]
+            else:
+                raise AttributeError("There is no such action as: " + str(_action))
         except IndexError:
             raise AttributeError("Too few arguments")
 
@@ -152,5 +221,7 @@ class Order:
             result = self.action + " " + self.thing + " " + str(self.lvl)
         elif self.action == "gather":
             result = self.action + " " + str(self.metal) + " metal, " + str(self.crystal) + " crystal, " + str(self.deuter) + " deuter."
+        elif self.action == "attack":
+            result = self.action + str(self.target.get("Galaxy")) + ":" + str(self.target.get("Star")) + ":" + str(self.target.get("Planet")) + str(self.fleet)
 
         return result
