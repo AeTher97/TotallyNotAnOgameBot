@@ -5,6 +5,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from planetState import PlanetState
 from selenium.webdriver.common.action_chains import ActionChains
 from OgameBot import OgameBot
+from fleet import Fleet
 import time
 import re
 
@@ -18,8 +19,10 @@ class GalaxySearcher():
 
         :param radius: Int
         :param startingPlanet: object PlanetState with coords
+        :param sendProbes: Bool
         :return: Nothing
         """
+
         targetList = []
         self.bot.setScope('galaxy')
         WebDriverWait(self.browser,10).until(
@@ -54,6 +57,36 @@ class GalaxySearcher():
 
             self.GoForth()
         return targetList
+
+    def Colonize(self,radius,startingPlanet):
+        """
+
+        :param radius: Int
+        :param startingPlanet: object PlanetState with coordinates
+        :return: Nothing
+        """
+
+        self.bot.setScope('galaxy')
+        WebDriverWait(self.browser, 10).until(
+            EC.presence_of_all_elements_located((By.XPATH, "//*[@id='colonized']")))
+        self.GoToSystem(startingPlanet.get('Galaxy'), startingPlanet.get('Star') - radius)
+
+        for j in range (-radius,radius):
+            for i in range(1, 15):
+                try:
+                    name = self.browser.find_element(By.XPATH, '//*[@id="galaxytable"]/tbody/tr[' + str(i) + ']/td[3]').text
+                except:
+                    if i>5 and i<10:
+                        colonizationFleet = Fleet()
+                        planet = PlanetState()
+                        Fleet.set('ColonizationShip',1)
+                        Fleet.set('Mission','Colonize')
+                        planet.set('Galaxy', startingPlanet.get('Galaxy'))
+                        planet.set('Star', startingPlanet.get('Star') + j)
+                        planet.set('Planet', i)
+                        self.bot.sendFleet(Fleet,planet)
+                    else:
+                        i = i+1
 
     def GoBack(self):
         self.bot.setScope('galaxy')
