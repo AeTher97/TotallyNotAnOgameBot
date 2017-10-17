@@ -360,7 +360,7 @@ class OgameBot:
                 btnToClick = self.browser.find_element(By.XPATH, selection)
                 btnToClick.click()
                 WebDriverWait(self.browser, 10).until(
-                    EC.presence_of_all_elements_located((By.XPATH, "//*[@id='content'']/span")))
+                    EC.presence_of_all_elements_located((By.XPATH, "//*[@id='content']/span")))
                 build = self.browser.find_element(By.XPATH, "//*[@id='content']/div[2]/a")
                 build.click()
             if thing in self._research:
