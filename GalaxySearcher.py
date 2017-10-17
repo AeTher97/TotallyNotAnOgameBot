@@ -103,7 +103,7 @@ class GalaxySearcher():
 
 
 
-            self.GoToSystem(startingPlanet.get('Galaxy'), startingPlanet.get('Star') - counter)
+            self.GoToSystem(startingPlanet.get('Galaxy'), startingPlanet.get('Star')+radius  - counter)
             for i in range(1, 15):
 
                 name = self.browser.find_element(By.XPATH, '//*[@id="galaxytable"]/tbody/tr[' + str(i) + ']/td[3]').text
