@@ -263,7 +263,7 @@ class OgameBot:
             string = self.browser.find_element(By.XPATH, '//*[@id="eventboxFilled"]/p').text
 
             number = re.findall(r'\d+', string)
-            self.airborneFleets = number[1]
+            self.airborneFleets = int(number[1])
             return self.airborneFleets
         except:
             print('no fleets airborne')
@@ -342,7 +342,7 @@ class OgameBot:
         if self.current_scope == page:
             return
         if page == 'fleet':
-            self.browser.get("https://s"+uninumber+"-pl.ogame.gameforge.com/game/index.php?page=fleet"+str(self.airborneFleets+1))
+            self.browser.get("https://s"+str(uninumber)+"-pl.ogame.gameforge.com/game/index.php?page=fleet"+str(self.airborneFleets))
         else:
             self.browser.get("https://s"+uninumber+"-pl.ogame.gameforge.com/game/index.php?page=" + page)
         self.current_scope = page

@@ -17,10 +17,10 @@ mainPlanet.set('Star',189)
 mainPlanet.set('Planet',12)
 testing.getInfoFleets()
 print(testing.getInfoFleets())
-"""
+
 cos = GalaxySearcher(testing)
 cos.Colonize(10,mainPlanet)
 testing.getInfoFleets()
 print(testing.airborneFleets)
-"""
+
 """login: mich password: oOunv72Pg744nd2d45zo universe: Wezn"""
