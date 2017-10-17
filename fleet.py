@@ -27,7 +27,10 @@ class Fleet:
         ]
 
         for i in self.attributes:
-            setattr(self, i, 0)
+            if i != 'Speed':
+                setattr(self, i, 0)
+            else:
+                setattr(self,i,100)
 
         # defenses
         # ships

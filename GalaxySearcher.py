@@ -22,6 +22,10 @@ class GalaxySearcher():
         :param sendProbes: Bool
         :return: Nothing
         """
+        if radius+startingPlanet.get('Star')>499:
+            radius=499-startingPlanet.get('Star')
+        if -radius+startingPlanet.get('Star')<1:
+            radius=startingPlanet.get('Star')-1
 
         targetList = []
         self.bot.setScope('galaxy')
@@ -63,30 +67,69 @@ class GalaxySearcher():
 
         :param radius: Int
         :param startingPlanet: object PlanetState with coordinates
-        :return: Nothing
+        :return: Bool if colonized True if failed to colonize: False
         """
 
         self.bot.setScope('galaxy')
         WebDriverWait(self.browser, 10).until(
             EC.presence_of_all_elements_located((By.XPATH, "//*[@id='colonized']")))
-        self.GoToSystem(startingPlanet.get('Galaxy'), startingPlanet.get('Star') - radius)
+        if radius+startingPlanet.get('Star')>499:
+            radius=499-startingPlanet.get('Star')
+        if -radius+startingPlanet.get('Star')<1:
+            radius=startingPlanet.get('Star')-1
 
+        counter = 0
         for j in range (-radius,radius):
+            self.GoToSystem(startingPlanet.get('Galaxy'), startingPlanet.get('Star')-radius+counter)
             for i in range(1, 15):
-                try:
-                    name = self.browser.find_element(By.XPATH, '//*[@id="galaxytable"]/tbody/tr[' + str(i) + ']/td[3]').text
-                except:
-                    if i>5 and i<10:
-                        colonizationFleet = Fleet()
-                        planet = PlanetState()
-                        Fleet.set('ColonizationShip',1)
-                        Fleet.set('Mission','Colonize')
-                        planet.set('Galaxy', startingPlanet.get('Galaxy'))
-                        planet.set('Star', startingPlanet.get('Star') + j)
-                        planet.set('Planet', i)
-                        self.bot.sendFleet(Fleet,planet)
-                    else:
-                        i = i+1
+
+                name = self.browser.find_element(By.XPATH, '//*[@id="galaxytable"]/tbody/tr[' + str(i) + ']/td[3]').text
+                print(name)
+                if name=='' and i>5 and i<10:
+                    colonizationFleet = Fleet()
+                    planet = PlanetState()
+                    colonizationFleet.set('ColonizationShip',1)
+                    colonizationFleet.set('Mission','Colonize')
+                    planet.set('Galaxy', startingPlanet.get('Galaxy'))
+                    planet.set('Star', startingPlanet.get('Star') + counter)
+                    planet.set('Planet', i)
+                    print('found planet')
+
+                    print('sending fleet')
+                    self.bot.sendFleet(colonizationFleet,planet)
+                    return True
+                else:
+                    i = i+1
+
+
+
+            self.GoToSystem(startingPlanet.get('Galaxy'), startingPlanet.get('Star') - counter)
+            for i in range(1, 15):
+
+                name = self.browser.find_element(By.XPATH, '//*[@id="galaxytable"]/tbody/tr[' + str(i) + ']/td[3]').text
+                print(name)
+                if i>5 and i<10 and name=='':
+                    colonizationFleet = Fleet()
+                    planet = PlanetState()
+                    colonizationFleet.set('ColonizationShip',1)
+                    colonizationFleet.set('Mission','Colonize')
+                    planet.set('Galaxy', startingPlanet.get('Galaxy'))
+                    planet.set('Star', startingPlanet.get('Star') +radius-counter)
+                    planet.set('Planet', i)
+                    print('found planet')
+
+                    print('sending fleet')
+                    self.bot.sendFleet(colonizationFleet,planet)
+                    return True
+                else:
+                    i = i+1
+
+
+
+            counter += 1
+        print('failed')
+        return False
+
 
     def GoBack(self):
         self.bot.setScope('galaxy')

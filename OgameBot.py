@@ -252,17 +252,24 @@ class OgameBot:
         self.mainPlanetState.set('Planet', int(numbers[2].replace('.', '')))
 
     def getInfoFleets(self):
+        """
+
+        :return: returns number of airborne fleets
+        """
 
         try:
             WebDriverWait(self.browser, 1).until(
                  EC.presence_of_all_elements_located((By.XPATH, "//*[@id='eventboxFilled']/p/span")))
             string = self.browser.find_element(By.XPATH, '//*[@id="eventboxFilled"]/p').text
-            print(string)
+
             number = re.findall(r'\d+', string)
-            self.airborneFleets = number[2]
+            self.airborneFleets = number[1]
+            return self.airborneFleets
         except:
             print('no fleets airborne')
             self.airborneFleets = 0
+            return 0
+
 
 
     def logout(self):
@@ -342,61 +349,64 @@ class OgameBot:
 
     def build(self, *args):
         thing = args[0]
+        try:
+            if len(args) == 1:
 
-        if len(args) == 1:
+                if thing in self._resources:
+                    self.setScope('resources')
+                    selection = "//a[@ref='" + self._resources[thing] + "']"
+                    btnToClick = self.browser.find_element(By.XPATH, selection)
+                    btnToClick.click()
+                    WebDriverWait(self.browser, 10).until(
+                        EC.presence_of_all_elements_located((By.XPATH, "//*[@id='content']/div[2]/a")))
+                    build = self.browser.find_element(By.XPATH, "//*[@id='content']/div[2]/a")
+                    build.click()
+                if thing in self._station:
+                    self.setScope('station')
+                    selection = "//a[@ref='" + self._station[thing] + "']"
+                    btnToClick = self.browser.find_element(By.XPATH, selection)
+                    btnToClick.click()
+                    WebDriverWait(self.browser, 10).until(
+                        EC.presence_of_all_elements_located((By.XPATH, "//*[@id='content']/span")))
+                    build = self.browser.find_element(By.XPATH, "//*[@id='content']/div[2]/a")
+                    build.click()
+                if thing in self._research:
+                    self.setScope('research')
+                    selection = "//a[@ref='" + self._research[thing] + "']"
+                    btnToClick = self.browser.find_element(By.XPATH, selection)
+                    btnToClick.click()
+                    WebDriverWait(self.browser, 10).until(
+                        EC.presence_of_all_elements_located((By.XPATH, "//*[@id='content']/span")))
+                    build = self.browser.find_element(By.XPATH, "//*[@id='content']/div[2]/a")
+                    build.click()
 
-            if thing in self._resources:
-                self.setScope('resources')
-                selection = "//a[@ref='" + self._resources[thing] + "']"
-                btnToClick = self.browser.find_element(By.XPATH, selection)
-                btnToClick.click()
-                WebDriverWait(self.browser, 10).until(
-                    EC.presence_of_all_elements_located((By.XPATH, "//*[@id='content']/div[2]/a")))
-                build = self.browser.find_element(By.XPATH, "//*[@id='content']/div[2]/a")
-                build.click()
-            if thing in self._station:
-                self.setScope('station')
-                selection = "//a[@ref='" + self._station[thing] + "']"
-                btnToClick = self.browser.find_element(By.XPATH, selection)
-                btnToClick.click()
-                WebDriverWait(self.browser, 10).until(
-                    EC.presence_of_all_elements_located((By.XPATH, "//*[@id='content']/span")))
-                build = self.browser.find_element(By.XPATH, "//*[@id='content']/div[2]/a")
-                build.click()
-            if thing in self._research:
-                self.setScope('research')
-                selection = "//a[@ref='" + self._research[thing] + "']"
-                btnToClick = self.browser.find_element(By.XPATH, selection)
-                btnToClick.click()
-                WebDriverWait(self.browser, 10).until(
-                    EC.presence_of_all_elements_located((By.XPATH, "//*[@id='content']/span")))
-                build = self.browser.find_element(By.XPATH, "//*[@id='content']/div[2]/a")
-                build.click()
-
-        if len(args) == 2:
-            number = args[1]
-            if thing in self._fleet:
-                self.setScope('shipyard')
-                selection = "//a[@ref='" + self._fleet[thing] + "']"
-                btnToClick = self.browser.find_element(By.XPATH, selection)
-                btnToClick.click()
-                WebDriverWait(self.browser, 10).until(
-                    EC.presence_of_all_elements_located((By.ID, "number")))
-                numberField = self.browser.find_element_by_id('number')
-                numberField.send_keys(number)
-                build = self.browser.find_element(By.XPATH, "//*[@id='content']/div[3]/a/span")
-                build.click()
-            if thing in self._defense:
-                self.setScope('defense')
-                selection = "//a[@ref='" + self._defense[thing] + "']"
-                btnToClick = self.browser.find_element(By.XPATH, selection)
-                btnToClick.click()
-                WebDriverWait(self.browser, 10).until(
-                    EC.presence_of_all_elements_located((By.ID, "number")))
-                numberField = self.browser.find_element_by_id('number')
-                numberField.send_keys(number)
-                build = self.browser.find_element(By.XPATH, "//*[@id='content']/div[3]/a/span")
-                build.click()
+            if len(args) == 2:
+                number = args[1]
+                if thing in self._fleet:
+                    self.setScope('shipyard')
+                    selection = "//a[@ref='" + self._fleet[thing] + "']"
+                    btnToClick = self.browser.find_element(By.XPATH, selection)
+                    btnToClick.click()
+                    WebDriverWait(self.browser, 10).until(
+                        EC.presence_of_all_elements_located((By.ID, "number")))
+                    numberField = self.browser.find_element_by_id('number')
+                    numberField.send_keys(number)
+                    build = self.browser.find_element(By.XPATH, "//*[@id='content']/div[3]/a/span")
+                    build.click()
+                if thing in self._defense:
+                    self.setScope('defense')
+                    selection = "//a[@ref='" + self._defense[thing] + "']"
+                    btnToClick = self.browser.find_element(By.XPATH, selection)
+                    btnToClick.click()
+                    WebDriverWait(self.browser, 10).until(
+                        EC.presence_of_all_elements_located((By.ID, "number")))
+                    numberField = self.browser.find_element_by_id('number')
+                    numberField.send_keys(number)
+                    build = self.browser.find_element(By.XPATH, "//*[@id='content']/div[3]/a/span")
+                    build.click()
+        except:
+            print('cannot build')
+            return -1
 
     def buildCancel(self, somethingToCancel):
         if somethingToCancel in self._resources:
@@ -466,8 +476,13 @@ class OgameBot:
             if fleet.get(attribute) != 0 and attribute!='Mission' and attribute!= 'Speed':
                 field = self.browser.find_element_by_id('ship_'+str(self._fleet[attribute]))
                 field.send_keys(fleet.get(attribute))
+        self.botWait()
+
         next = self.browser.find_element_by_xpath('//*[@id="continue"]/span')
-        next.click()
+        try:
+            next.click()
+        except:
+            next.click()
 
         WebDriverWait(self.browser, 10).until(
             EC.presence_of_all_elements_located((By.XPATH, '//*[@id="speedLinks"]/a[1]')))
@@ -503,6 +518,8 @@ class OgameBot:
         next = self.browser.find_element_by_xpath('//*[@id="start"]')
         next.click()
         self.airborneFleets = self.airborneFleets+1
+        print('finished')
+
 
 
     # TODO
