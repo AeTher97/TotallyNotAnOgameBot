@@ -3,6 +3,7 @@ from fleet import Fleet
 from Requirements import getRequirementsTech
 from Requirements import getRequirementsRes
 
+
 def find_steps(old_state=PlanetState(), new_state=PlanetState()):
     """
     Priority:

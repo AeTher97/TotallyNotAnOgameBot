@@ -327,8 +327,8 @@ class OgameBot:
 
         self.current_scope = "overview"
 
-    def botWait(self):
-        time.sleep(1)
+    def botWait(self, seconds=1):
+        time.sleep(seconds)
 
     def setScope(self, page):
         """
@@ -519,6 +519,31 @@ class OgameBot:
         next.click()
         self.airborneFleets = self.airborneFleets+1
         print('finished')
+
+    def executeOrder(self, order):                                                                                      # TODO execute order on different planets
+        """
+        :param order: object Order
+        :return: Bool: False if couldn't execute order, True otherwise
+        """
+        if order.action == "gather":
+            gathered = False
+            while not gathered:
+                if(self.mainPlanetState.get("metal") >= order.metal and
+                   self.mainPlanetState.get("crystal") >= order.crystal and
+                   self.mainPlanetState.get("deuter") >= order.deuter):
+                    return True
+                else:
+                    gathered = False
+                    self.botWait(10)
+        elif order.action == "build":
+            if order.thing in self._fleet or order.thing in self._defense:
+                self.build(order.thing, order.lvl)
+            else:
+                self.build(order.thing)
+            return True
+        elif order.action == "attack":
+            self.sendFleet(order.fleet, order.target)
+            return True
 
 
 
