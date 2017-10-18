@@ -11,16 +11,25 @@ testing = OgameBot()
 testing.launchBrowser()
 testing.login('michael93509@gmail.com','oOunv72Pg744nd2d45zo','uriel')
 
-mainPlanet = PlanetState()
-mainPlanet.set('Galaxy',4)
-mainPlanet.set('Star',189)
-mainPlanet.set('Planet',12)
-testing.getInfoFleets()
-print(testing.getInfoFleets())
+taki_jak_chce_osiagnac = PlanetState()
+testing.getInfoAll()
 
-cos = GalaxySearcher(testing)
-cos.Colonize(10,mainPlanet)
-testing.getInfoFleets()
-print(testing.airborneFleets)
+taki_jak_chce_osiagnac.set('MetalMine',12)
+taki_jak_chce_osiagnac.set('CrystalMine',10)
+taki_jak_chce_osiagnac.set('DeuterExtractor',7)
+taki_jak_chce_osiagnac.set('SolarPowerPlant',12)
+taki_jak_chce_osiagnac.set('RobotFactory',4)
+testing.changePlanet(2)
+
+"""
+for i in testing.mainPlanetState._attributes:
+    print("planetState1.set(" + "'"+i+"'" + ", " + str(testing.mainPlanetState.get(i)) + ")")
+
+zmienna = find_steps(testing.mainPlanetState,taki_jak_chce_osiagnac)
+
+orders = convert_steps_to_orders(testing.mainPlanetState, zmienna)
+
+"""
+
 
 """login: mich password: oOunv72Pg744nd2d45zo universe: Wezn"""

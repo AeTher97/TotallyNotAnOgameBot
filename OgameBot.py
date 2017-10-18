@@ -2,6 +2,7 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.remote import webelement
 import time
 import re
 from planetState import PlanetState
@@ -105,8 +106,7 @@ class OgameBot:
                     level = int(re.search(r'\d+', self.browser.find_element_by_xpath(
                         "//*[@id='content']/span").text).group())
                     self.mainPlanetState.set(building, level)
-            except Exception as e:
-                print(e)
+            except:
                 overlay = self.browser.find_element(By.XPATH,'//*[@id="details'+str(self._resources[building])+'"]')
                 overlay.click()
                 WebDriverWait(self.browser, 10).until(
@@ -240,6 +240,59 @@ class OgameBot:
         average = (int(Edges[0])+int(Edges[1]))/2
         self.mainPlanetState.set('temperature', average)
 
+    def getInfoAttacks(self):
+        """
+
+        :return: return PlanetState objcets of planet being attacked if no planets are being attacked returns 0
+        """
+        plantesUnderAttack = []
+        try:
+
+            WebDriverWait(self.browser, 1).until(
+                 EC.presence_of_all_elements_located((By.XPATH, "//*[@id='eventboxFilled']/p/span")))
+            string = self.browser.find_element(By.XPATH, '//*[@id="eventboxFilled"]/p').text
+
+            if string.find('wrogi') != -1 and string.find('wrogie') != -1:
+                print('lol')
+                number = re.findall(r'\d+', string)
+                print('warning '+str(number[2])+'attacks')
+                expand = self.browser.find_element_by_xpath('//*[@id="js_eventDetailsClosed"]')
+                self.botWait()
+                listTimesAttacks = self.browser.find_elenets_by_class_name('//*[@id="counter-eventlist-12767572"]').text
+                listTimesOwnFleets = self.browser.find_elenets_by_class_name('countDown friendly textBeefy').text
+                listCoordinates = self.browser.find_elenets_by_class_name('//*[@id="eventContent"]/tbody/tr[1]/td[9]').text
+                listsCombined = []
+                j=0
+
+                attacksWithCords = {}
+                for i in range(0,len(listTimesAttacks)+len(listTimesOwnFleets)):
+                    if j < len(listTimesAttacks):
+                        listsCombined[i]=listTimesAttacks[i]
+                        j+=1
+                    else:
+                        listsCombined[i]=listTimesOwnFleets[i-j]
+                listsCombined.sort()
+                j=0
+                for time in listsCombined:
+                    if listsCombined[i]==listTimesAttacks[j]:
+                        attacksWithCords[str(listsCombined[i])] = str(listCoordinates[i])
+                        j+=1
+
+                planet = PlanetState()
+                for element in attacksWithCords:
+                    numbers = re.findall(r'\d+', attacksWithCords[element])
+                    planet.set('Galaxy', int(numbers[0].replace('.', '')))
+                    planet.set('Star', int(numbers[1].replace('.', '')))
+                    planet.set('Planet', int(numbers[2].replace('.', '')))
+                    plantesUnderAttack.append(planet)
+                    print('found planet under attack ['+str(numbers[0])+':'+str(numbers[1])+':'+str(number[2])+']')
+
+                return plantesUnderAttack
+        except:
+            print('no attacks')
+            return 0
+
+
     def getInfoPlanetPosition(self):
         self.setScope('overview')
         WebDriverWait(self.browser, 10).until(
@@ -310,20 +363,38 @@ class OgameBot:
 
     def login(self, login, password, universe):
         commercialCloseButton = self.browser.find_element(By.XPATH, "//a[@href='javascript:;']")
-        LoginWindowOpen = self.browser.find_element_by_id('loginBtn')
-        usernameField = self.browser.find_element_by_id('usernameLogin')
-        passwordField = self.browser.find_element_by_id('passwordLogin')
-        serverField = self.browser.find_element_by_id('serverLogin')
-        loginButton = self.browser.find_element_by_id('loginSubmit')
-
         commercialCloseButton.click()
-        LoginWindowOpen.click()
-        for i in login:
-            usernameField.send_keys(i)
-        for i in password:
-            passwordField.send_keys(i)
-        serverField.send_keys(universe)
-        loginButton.click()
+        LoggedIn=0
+        FailCounter=0
+        while LoggedIn==0:
+            try:
+                LoginWindowOpen = self.browser.find_element_by_id('loginBtn')
+                LoginWindowOpen.click()
+            except:
+                print('login window extended')
+            usernameField = self.browser.find_element_by_id('usernameLogin')
+            passwordField = self.browser.find_element_by_id('passwordLogin')
+            serverField = self.browser.find_element_by_id('serverLogin')
+            loginButton = self.browser.find_element_by_id('loginSubmit')
+
+
+
+            try:
+                for i in login:
+                    usernameField.send_keys(i)
+                for i in password:
+                    passwordField.send_keys(i)
+                serverField.send_keys(universe)
+                loginButton.click()
+            except:
+                print('failed again')
+            try:
+                self.browser.find_element_by_xpath('//*[@id="logoLink"]')
+                LoggedIn=1
+            except:
+                print('failed to log in')
+            if FailCounter=='5':
+                self.browser.get(('https://pl.ogame.gameforge.com/'))
 
         self.current_scope = "overview"
 
@@ -348,65 +419,99 @@ class OgameBot:
         self.current_scope = page
 
     def build(self, *args):
+        """
+
+        :param args:
+        :return:
+        :except: cannot build if cannot build
+        """
         thing = args[0]
-        try:
-            if len(args) == 1:
 
-                if thing in self._resources:
-                    self.setScope('resources')
-                    selection = "//a[@ref='" + self._resources[thing] + "']"
-                    btnToClick = self.browser.find_element(By.XPATH, selection)
-                    btnToClick.click()
-                    WebDriverWait(self.browser, 10).until(
-                        EC.presence_of_all_elements_located((By.XPATH, "//*[@id='content']/div[2]/a")))
-                    build = self.browser.find_element(By.XPATH, "//*[@id='content']/div[2]/a")
-                    build.click()
-                if thing in self._station:
-                    self.setScope('station')
-                    selection = "//a[@ref='" + self._station[thing] + "']"
-                    btnToClick = self.browser.find_element(By.XPATH, selection)
-                    btnToClick.click()
-                    WebDriverWait(self.browser, 10).until(
-                        EC.presence_of_all_elements_located((By.XPATH, "//*[@id='content']/span")))
-                    build = self.browser.find_element(By.XPATH, "//*[@id='content']/div[2]/a")
-                    build.click()
-                if thing in self._research:
-                    self.setScope('research')
-                    selection = "//a[@ref='" + self._research[thing] + "']"
-                    btnToClick = self.browser.find_element(By.XPATH, selection)
-                    btnToClick.click()
-                    WebDriverWait(self.browser, 10).until(
-                        EC.presence_of_all_elements_located((By.XPATH, "//*[@id='content']/span")))
-                    build = self.browser.find_element(By.XPATH, "//*[@id='content']/div[2]/a")
-                    build.click()
+        if len(args) == 1:
 
-            if len(args) == 2:
-                number = args[1]
-                if thing in self._fleet:
-                    self.setScope('shipyard')
-                    selection = "//a[@ref='" + self._fleet[thing] + "']"
-                    btnToClick = self.browser.find_element(By.XPATH, selection)
+            if thing in self._resources:
+                self.setScope('resources')
+                selection = "//a[@ref='" + self._resources[thing] + "']"
+                btnToClick = self.browser.find_element(By.XPATH, selection)
+                try:
                     btnToClick.click()
-                    WebDriverWait(self.browser, 10).until(
-                        EC.presence_of_all_elements_located((By.ID, "number")))
-                    numberField = self.browser.find_element_by_id('number')
-                    numberField.send_keys(number)
-                    build = self.browser.find_element(By.XPATH, "//*[@id='content']/div[3]/a/span")
-                    build.click()
-                if thing in self._defense:
-                    self.setScope('defense')
-                    selection = "//a[@ref='" + self._defense[thing] + "']"
-                    btnToClick = self.browser.find_element(By.XPATH, selection)
+                except:
+                    raise Exception('cannot build')
+                WebDriverWait(self.browser, 10).until(
+                    EC.presence_of_all_elements_located((By.XPATH, "//*[@id='content']/div[2]/a")))
+                build = self.browser.find_element(By.XPATH, "//*[@id='content']/div[2]/a")
+                build.click()
+                return
+            if thing in self._station:
+                self.setScope('station')
+                selection = "//a[@ref='" + self._station[thing] + "']"
+                btnToClick = self.browser.find_element(By.XPATH, selection)
+                try:
                     btnToClick.click()
-                    WebDriverWait(self.browser, 10).until(
-                        EC.presence_of_all_elements_located((By.ID, "number")))
-                    numberField = self.browser.find_element_by_id('number')
+                except:
+                    raise Exception('cannot build')
+                WebDriverWait(self.browser, 10).until(
+                    EC.presence_of_all_elements_located((By.XPATH, "//*[@id='content']/span")))
+                build = self.browser.find_element(By.XPATH, "//*[@id='content']/div[2]/a")
+                build.click()
+                return
+            if thing in self._research:
+                self.setScope('research')
+                selection = "//a[@ref='" + self._research[thing] + "']"
+                btnToClick = self.browser.find_element(By.XPATH, selection)
+                try:
+                    btnToClick.click()
+                except:
+                    raise Exception('cannot build')
+                WebDriverWait(self.browser, 10).until(
+                    EC.presence_of_all_elements_located((By.XPATH, "//*[@id='content']/span")))
+                build = self.browser.find_element(By.XPATH, "//*[@id='content']/div[2]/a")
+                build.click()
+                return
+
+        if len(args) == 2:
+            number = args[1]
+            if thing in self._fleet:
+                self.setScope('shipyard')
+                selection = "//a[@ref='" + self._fleet[thing] + "']"
+                btnToClick = self.browser.find_element(By.XPATH, selection)
+                try:
+                    btnToClick.click()
+                except:
+                    raise Exception('cannot build')
+
+                WebDriverWait(self.browser, 10).until(
+                    EC.presence_of_all_elements_located((By.ID, "number")))
+                numberField = self.browser.find_element_by_id('number')
+                try:
                     numberField.send_keys(number)
-                    build = self.browser.find_element(By.XPATH, "//*[@id='content']/div[3]/a/span")
-                    build.click()
-        except:
-            print('cannot build')
-            return -1
+                except:
+                    print('cant choose any number')
+                build = self.browser.find_element(By.XPATH, "//*[@id='content']/div[3]/a/span")
+                build.click()
+                return
+            if thing in self._defense:
+                self.setScope('defense')
+                selection = "//a[@ref='" + self._defense[thing] + "']"
+                btnToClick = self.browser.find_element(By.XPATH, selection)
+                try:
+                    btnToClick.click()
+                except:
+                    raise Exception('cannot build')
+                WebDriverWait(self.browser, 10).until(
+                    EC.presence_of_all_elements_located((By.ID, "number")))
+                numberField = self.browser.find_element_by_id('number')
+                try:
+                    numberField.send_keys(number)
+                except:
+                    print('can choose number')
+                build = self.browser.find_element(By.XPATH, "//*[@id='content']/div[3]/a/span")
+                build.click()
+                return
+
+
+
+
 
     def buildCancel(self, somethingToCancel):
         if somethingToCancel in self._resources:
@@ -470,6 +575,22 @@ class OgameBot:
         accept = self.browser.find_element_by_xpath("//*[@id='prefs']/div[1]/div[5]/input")
         accept.click()
 
+    def setResourcesDigginRater(self,resource,rate):
+        self.setScope('resourceSettings')
+        if resource=='Metal':
+            value = self.browser.find_element_by_xpath('//*[@id="inhalt"]/div[2]/div[2]/form/table/tbody/tr[4]/td[7]/span/a')
+            button = self.browser.find_element_by_xpath('//*[@id="factor"]/div/div/span[2]/input')
+            value.send_keys(rate)
+            button.click()
+        if resource=='Crystal':
+            value = self.browser.find_element_by_xpath('//*[@id="inhalt"]/div[2]/div[2]/form/table/tbody/tr[5]/td[7]/span/a')
+            button = self.browser.find_element_by_xpath('//*[@id="factor"]/div/div/span[2]/input')
+            button.click()
+        if resource=='Deuter':
+            velue = self.browser.find_element_by_xpath('//*[@id="inhalt"]/div[2]/div[2]/form/table/tbody/tr[6]/td[7]/span/a')
+            button = self.browser.find_element_by_xpath('//*[@id="factor"]/div/div/span[2]/input')
+            button.click()
+
     def sendFleet(self,fleet,target):
         self.setScope('fleet')
         for attribute in fleet.attributes:
@@ -520,6 +641,16 @@ class OgameBot:
         self.airborneFleets = self.airborneFleets+1
         print('finished')
 
+    def changePlanet(self,planet):
+        """
+
+        :param planet: number of planet indexing from 1
+        :return:
+        """
+        self.setScope('overview')
+        planetbutton = self.browser.find_element_by_xpath("//div[@id='planetList']/div["+str(planet)+"]")
+        planetbutton.click()
+
     def executeOrder(self, order):                                                                                      # TODO execute order on different planets
         """
         :param order: object Order
@@ -548,3 +679,4 @@ class OgameBot:
 
 
     # TODO
+
