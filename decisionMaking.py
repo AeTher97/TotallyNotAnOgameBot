@@ -223,6 +223,6 @@ class Order:
         elif self.action == "gather":
             result = self.action + " " + str(self.metal) + " metal, " + str(self.crystal) + " crystal, " + str(self.deuter) + " deuter."
         elif self.action == "attack":
-            result = self.action + str(self.target.get("Galaxy")) + ":" + str(self.target.get("Star")) + ":" + str(self.target.get("Planet")) + str(self.fleet)
+            result = self.action + " " + str(self.target.get("Galaxy")) + ":" + str(self.target.get("Star")) + ":" + str(self.target.get("Planet"))
 
         return result
