@@ -7,6 +7,8 @@ import time
 import re
 from planetState import PlanetState
 
+import random
+
 
 class OgameBot:
     def __init__(self):
@@ -665,13 +667,19 @@ class OgameBot:
                     return True
                 else:
                     gathered = False
-                    self.botWait(10)
+                    self.botWait(30)
         elif order.action == "build":
-            if order.thing in self._fleet or order.thing in self._defense:
-                self.build(order.thing, order.lvl)
-            else:
-                self.build(order.thing)
-            return True
+            action_possible = False
+            while not action_possible:
+                try:
+                    if order.thing in self._fleet or order.thing in self._defense:
+                        self.build(order.thing, order.lvl)
+                    else:
+                        self.build(order.thing)
+                    return True
+                except Exception:
+                    self.botWait(60 + random.randrange(0, 30))
+                    action_possible = False
         elif order.action == "attack":
             self.sendFleet(order.fleet, order.target)
             return True
