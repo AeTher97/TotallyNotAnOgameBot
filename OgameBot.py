@@ -6,74 +6,84 @@ from selenium.webdriver.remote import webelement
 import time
 import re
 from planetState import PlanetState
+import collections
 
 import random
 
 
 class OgameBot:
     def __init__(self):
-        self._resources = {'MetalMine': '1',
-                           'CrystalMine': '2',
-                           'DeuterExtractor': '3',
-                           'SolarPowerPlant': '4',
-                           'FusionPowerPlant': '12',
-                           'MetalStorage': '22',
-                           'CrystalStorage': '23',
-                           'DeuterStorage': '24'}
-        self._station = {'RobotFactory': '14',
-                         'Shipyard': '21',
-                         'Laboratory': '31',
-                         'AllayDepot': '34',
-                         'RocketSilo': '44',
-                         'NaniteFactory': '15',
-                         'Terraformer': '33',
-                         'SpaceDock': '36'}
+        self._resources = collections.OrderedDict([('MetalMine', '1'),
+                                                   ('CrystalMine', '2'),
+                                                   ('DeuterExtractor', '3'),
+                                                   ('SolarPowerPlant', '4'),
+                                                   ('FusionPowerPlant', '12'),
+                                                   ('MetalStorage', '22'),
+                                                   ('CrystalStorage', '23'),
+                                                   ('DeuterStorage', '24')])
 
-        self._research = {'EnergyTechnology': '113',
-                          'LaserTechnology': '120',
-                          'IonTechnology': '121',
-                          'HyperspaceTechnology': '114',
-                          'PlasmaTechnology': '122',
-                          'CombustionDrive': '115',
-                          'ImpulseDrive': '117',
-                          'HyperDrive': '118',
-                          'SpyTechnology': '106',
-                          'ComputerTechnology': '108',
-                          'Astrophysics': '124',
-                          'IntergalacticResearchNetwork': '123',
-                          'GravitonDevelopment': '199',
-                          'BattleTechnology': '109',
-                          'ShieldingTechnology': '110',
-                          'Armor': '111'}
+        self._station = collections.OrderedDict([('RobotFactory', '14'),
+                                                 ('Shipyard', '21'),
+                                                 ('Laboratory', '31'),
+                                                 ('AllayDepot', '34'),
+                                                 ('RocketSilo', '44'),
+                                                 ('NaniteFactory', '15'),
+                                                 ('Terraformer', '33'),
+                                                 ('SpaceDock', '36')])
 
-        self._fleet = {'LightFighter': '204',
-                       'HeavyFighter': '205',
-                       'Cruiser': '206',
-                       'Battleship': '207',
-                       'LightTransport': '202',
-                       'HeavyTransport': '203',
-                       'ColonizationShip': '208',
-                       'Dreadnought': '215',
-                       'Bomber': '211',
-                       'Destroyer': '213',
-                       'DeathStar': '214',
-                       'Recycler': '209',
-                       'SpyProbe': '210',
-                       'SolarSatellite': '212'}
+        self._research = collections.OrderedDict([('EnergyTechnology', '113'),
+                                                  ('LaserTechnology', '120'),
+                                                  ('IonTechnology', '121'),
+                                                  ('HyperspaceTechnology', '114'),
+                                                  ('PlasmaTechnology', '122'),
+                                                  ('CombustionDrive', '115'),
+                                                  ('ImpulseDrive', '117'),
+                                                  ('HyperDrive', '118'),
+                                                  ('SpyTechnology', '106'),
+                                                  ('ComputerTechnology', '108'),
+                                                  ('Astrophysics', '124'),
+                                                  ('IntergalacticResearchNetwork', '123'),
+                                                  ('GravitonDevelopment', '199'),
+                                                  ('BattleTechnology', '109'),
+                                                  ('ShieldingTechnology', '110'),
+                                                  ('Armor', '111')])
 
-        self._defense = {'RocketLauncher': '401',
-                         'LightLaserCannon': '402',
-                         'HeavyLaserCannon': '403',
-                         'GaussCannon': '404',
-                         'IonCannon': '405',
-                         'PlasmaLauncher': '406',
-                         'SmallPlanetaryShield': '407',
-                         'LargePlanetaryShield': '408',
-                         'AntiMissile': '502',
-                         'InterplanetaryMissile': '503'}
+        self._fleet = collections.OrderedDict([('LightFighter', '204'),
+                                               ('HeavyFighter', '205'),
+                                               ('Cruiser', '206'),
+                                               ('Battleship', '207'),
+                                               ('LightTransport', '202'),
+                                               ('HeavyTransport', '203'),
+                                               ('ColonizationShip', '208'),
+                                               ('Dreadnought', '215'),
+                                               ('Bomber', '211'),
+                                               ('Destroyer', '213'),
+                                               ('DeathStar', '214'),
+                                               ('Recycler', '209'),
+                                               ('SpyProbe', '210'),
+                                               ('SolarSatellite', '212')])
 
-        self._missions = {'Expedition':'15','Colonize':'7','Recycle':'8','Transport':'3','Station':'4',
-                          'Spy':'6','Stop':'5','Attack':'1','AllyAttack':'2','Destroy':'9'}
+        self._defense = collections.OrderedDict([('RocketLauncher', '401'),
+                                                 ('LightLaserCannon', '402'),
+                                                 ('HeavyLaserCannon', '403'),
+                                                 ('GaussCannon', '404'),
+                                                 ('IonCannon', '405'),
+                                                 ('PlasmaLauncher', '406'),
+                                                 ('SmallPlanetaryShield', '407'),
+                                                 ('LargePlanetaryShield', '408'),
+                                                 ('AntiMissile', '502'),
+                                                 ('InterplanetaryMissile', '503')])
+
+        self._missions = collections.OrderedDict([('Expedition', '15'),
+                                                  ('Colonize', '7'),
+                                                  ('Recycle', '8'),
+                                                  ('Transport', '3'),
+                                                  ('Station', '4'),
+                                                  ('Spy', '6'),
+                                                  ('Stop', '5'),
+                                                  ('Attack', '1'),
+                                                  ('AllyAttack', '2'),
+                                                  ('Destroy', '9')])
 
         self.current_scope = ""
         self.browser = None
